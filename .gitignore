@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+.env.local
+
+# Logs
+*.log
+logs/
+
+# Runtime data
+*.pid
+*.seed
+
+# IDE/Editor
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+# Debug files
+npm-debug.log*
+
+# Local development files
+tmp/
+temp/
