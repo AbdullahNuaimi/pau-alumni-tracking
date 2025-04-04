@@ -3,9 +3,9 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    /* background-image: url('https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fGxvZ298ZW58MHx8fHwxNjg5NTY1NzA3&ixlib=rb-4.0.3&q=80&w=1080'); */
-    /* background-size: cover; */
-    /* background-position: center; */
+    background-image: url('../../assets/background.png');
+    background-size: cover;
+    background-position: center;
 }
 .login-container {
     background: #fff;
@@ -85,4 +85,8 @@ h2 {
 .links a:hover {
     text-decoration: underline;
     color: #660000;
+}
+
+a{
+    cursor: pointer;
 }

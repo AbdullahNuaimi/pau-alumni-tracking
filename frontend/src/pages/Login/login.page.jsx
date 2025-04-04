@@ -1,27 +1,55 @@
 import "./login.css"
 import logo from "../../assets/pau_logo.jpg";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 const Login = () => {
   const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState({ email: '', password: '' });
+  const [passwordReset, setPasswordReset] = useState(false);
+  
+  const validateEmail = (input) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input);
+  const validatePassword = (input) => /^(?=.*\d).{8,}$/.test(input);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const isEmailValid = validateEmail(email);
+    const isPasswordValid = validatePassword(password);
+
+    setErrors({
+      email: isEmailValid ? '' : 'بريد غير صحيح',
+      password: isPasswordValid ? '' : 'كلمة المرور يجب أن تحتوي على 8 أحرف على الأقل ورقم واحد',
+    });
+
+    if (isEmailValid && isPasswordValid) {
+      console.log('Form submitted:', { email, password });
+      navigate('/dashboard');
+    }
+  };
+
   return (
     <div className="login-page">
       <div className="login-container">
         <img src={logo} alt="شعار جامعة فلسطين الأهلية" className="logo" />
         <h2>تسجيل الدخول</h2>
-        <form action="dashboard.html" method="POST">
+        <form onSubmit={handleSubmit}>
           <div className="input-group">
             <label for="email">البريد الإلكتروني</label>
-            <input type="email" id="email" name="email" required />
+            <input type="text" id="email" name="email" onChange={(e) => setEmail(e.target.value)} />
+            {errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
           </div>
           <div className="input-group">
             <label for="password">كلمة المرور</label>
-            <input type="password" id="password" name="password" required />
+            <input type="password" id="password" name="password" onChange={(e) => setPassword(e.target.value)} />
+            {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
           </div>
-          <button type="button" className="login-btn" onClick={()=>{navigate('/dashboard')}}>تسجيل الدخول</button>
+          <button type="submit" className="login-btn">تسجيل الدخول</button>
         </form>
         <div className="links">
-          <a href="Password_reset.html">نسيت كلمة المرور؟</a>
-          <a href="register">إنشاء حساب جديد</a>
+          <a onClick={()=>{setPasswordReset(true)}}>نسيت كلمة المرور؟</a>
+          {passwordReset && <p style={{ color: 'green' }}>تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني.</p>}
+          <a onClick={()=>{navigate("/register")}}>إنشاء حساب جديد</a>
         </div>
       </div>
     </div>

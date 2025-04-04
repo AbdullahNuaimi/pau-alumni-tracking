@@ -11,7 +11,6 @@ import NavigationBar from './components/NavigationBar/navigationBar.component';
 function App() {
   return (
     <div>
-      <h1>PAU Alumni Frontend</h1>
       <BrowserRouter>
       <NavigationBar />
       <Routes>

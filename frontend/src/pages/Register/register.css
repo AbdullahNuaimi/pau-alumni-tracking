@@ -12,8 +12,11 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f8f9fa;
+    background-image: url('../../assets/background.png');
+    background-size: cover;
+    background-position: center;
 }
+
 .signup-container {
     background: #fff;
     padding: 30px;
