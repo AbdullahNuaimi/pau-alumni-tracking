@@ -6,7 +6,7 @@ import Login from './pages/Login/login.page';
 import Register from './pages/Register/register.page';
 import ViewPost from './pages/ViewPost/viewPost.page';
 import GraduationBook from './pages/GraduationBook/graduationBook.page';
-import Profile from './pages/profile/profile.page';
+import ProfilePage from './pages/ProfilePage/profilePage.page';
 import NavigationBar from './components/NavigationBar/navigationBar.component';
 function App() {
   return (
@@ -19,7 +19,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/" element={<Login />} />
         <Route path='/GraduationBook' element={<GraduationBook />} />
-        <Route path='/Profile' element={<Profile />} />
+        <Route path='/ProfilePage' element={<ProfilePage />} />
         <Route path="/community" element={<Community />} />
         <Route path="/community/:postId" element={<ViewPost />} />
       </Routes>
