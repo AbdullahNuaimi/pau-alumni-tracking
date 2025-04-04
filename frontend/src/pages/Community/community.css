@@ -1,0 +1,153 @@
+.content {
+    margin-right: 250px;
+    padding: 20px;
+}
+
+.post, .new-post {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    margin-bottom: 20px;
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.post-header i {
+    font-size: 40px;
+    color: gray;
+    margin-left: 10px;
+}
+
+.post-header .user-info {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+}
+
+.post-header .user-info small {
+    color: gray;
+    margin-right: 10px;
+}
+
+.post img {
+    width: 60%;
+    height: auto;
+    border-radius: 5px;
+    margin: 10px auto;
+    display: block;
+}
+
+.post .actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #ddd;
+}
+
+.post .actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #800000;
+}
+
+.post .actions button:hover {
+    color: #a52a2a;
+}
+
+.comments {
+margin-top: 10px;
+display: flex; 
+align-items: center;
+gap: 10px; 
+}
+
+.comments input {
+width: 80%; 
+padding: 8px;
+border-radius: 5px;
+border: 1px solid #ccc;
+}
+
+.comments .comment-button {
+background-color: #800000;
+color: white;
+border: none;
+border-radius: 5px;
+padding: 8px 15px;
+cursor: pointer;
+font-size: 14px;
+}
+
+.comments .comment-button:hover {
+background-color: #a52a2a;
+}
+
+.new-post h3 {
+    color: #800000;
+    margin-bottom: 10px;
+}
+
+.new-post textarea {
+    width: 100%;
+    height: 80px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.new-post input[type="file"] {
+    margin-bottom: 10px;
+}
+
+.new-post button {
+    background-color: #800000;
+    color: white;
+    padding: 10px;
+    width: 100%;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.new-post button:hover {
+    background-color: #a52a2a;
+}
+
+.pending-posts {
+    margin-bottom: 20px;
+}
+
+.pending-posts h3 {
+    color: #800000;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.pending-posts h3:hover {
+    text-decoration: underline;
+}
+
+.pending-posts-list {
+    display: none;
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
+#postText{
+    max-width: 1400px;
+    resize: none;
+    height: 60px;
+}

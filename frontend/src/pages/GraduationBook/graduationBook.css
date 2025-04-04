@@ -1,0 +1,52 @@
+.content {
+    margin-right: 250px;
+    padding: 20px;
+}
+
+
+.content h2{
+    display: flex;
+    align-items: right;
+    justify-content: right;
+}
+.request-form {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    width: 400px;
+    margin: 20px 0; 
+    margin-right: 1px; 
+    text-align: right; 
+    float: right; 
+}
+
+.request-form label {
+    display: block;
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 14px; 
+    color: #555; 
+}
+
+.request-form input, .request-form select, .request-form button {
+    width: 55%; 
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px; 
+}
+
+.request-form button {
+    background-color: #800000;
+    width: 20%; 
+    color: white;
+    cursor: pointer;
+    border: none;
+    margin-top: 15px;
+}
+
+.request-form button:hover {
+    background-color: #a52a2a;
+}
