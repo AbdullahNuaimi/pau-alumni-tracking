@@ -1,26 +1,9 @@
-import { use, useState } from 'react';
+import { useState } from 'react';
 import './profilePage.css'; // RTL stylesheet
-import { DEFAULT_PROFILE_IMAGE } from '../../assets/defaultPfpBase64';
+import { useUser } from '../../contexts/UserContext';
 
 const ProfilePage = () => {
-    // User data state
-    const [user, setUser] = useState({
-        name: 'محمد أحمد',
-        email: 'mohamed@example.com',
-        password: '',
-        profilePic: DEFAULT_PROFILE_IMAGE,
-        education: {
-            college: 'جامعة الأهلية الفلسطينية',
-            major: 'هندسة الحاسوب',
-            degree: 'بكالوريوس'
-        },
-        career: {
-            employed: true,
-            company: 'شركة التقنية الحديثة',
-            title: 'مهندس برمجيات',
-            duration: '2020 - الحاضر'
-        }
-    });
+    const { user, setUser } = useUser(); // Get user data from context
     const [initialUser,setinitialUser] = useState(user);
     const [editMode, setEditMode] = useState(false);
 

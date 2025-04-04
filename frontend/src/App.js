@@ -8,22 +8,25 @@ import ViewPost from './pages/ViewPost/viewPost.page';
 import GraduationBook from './pages/GraduationBook/graduationBook.page';
 import ProfilePage from './pages/ProfilePage/profilePage.page';
 import NavigationBar from './components/NavigationBar/navigationBar.component';
+import { UserProvider } from './contexts/UserContext';
 function App() {
   return (
     <div>
-      <BrowserRouter>
-      <NavigationBar />
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/" element={<Login />} />
-        <Route path='/GraduationBook' element={<GraduationBook />} />
-        <Route path='/ProfilePage' element={<ProfilePage />} />
-        <Route path="/community" element={<Community />} />
-        <Route path="/community/:postId" element={<ViewPost />} />
-      </Routes>
-    </BrowserRouter>
+      <UserProvider>
+        <BrowserRouter>
+          <NavigationBar />
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/" element={<Login />} />
+            <Route path='/GraduationBook' element={<GraduationBook />} />
+            <Route path='/ProfilePage' element={<ProfilePage />} />
+            <Route path="/community" element={<Community />} />
+            <Route path="/community/:postId" element={<ViewPost />} />
+          </Routes>
+        </BrowserRouter>
+      </UserProvider>
     </div>
   );
 }
