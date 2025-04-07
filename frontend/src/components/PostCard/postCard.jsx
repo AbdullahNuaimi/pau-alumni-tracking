@@ -2,6 +2,8 @@ import { useUser } from "../../contexts/UserContext";
 import './postCard.css';
 const PostCard = ({ post }) => {
   const { user } = useUser();
+  const showPendingStatus = (post.status === 'pending' && 
+    (post.author === user.name || user.isAdmin));
   const postTypeLabels = {
     general: 'عام',
     announcement: 'إعلان',
@@ -15,11 +17,16 @@ const PostCard = ({ post }) => {
     rejected: 'red'
   };
   return (
-    <div className="post-card"
+    <div className={`post-card ${post.status}`}
     style={{
         borderLeft: `4px solid ${statusColors[post.status]}`,
         opacity: post.status === 'rejected' ? 0.7 : 1
       }}>
+        {showPendingStatus && (
+        <div className="pending-badge">
+          ⏳ قيد المراجعة (فقط أنت والمسؤولون يمكنهم رؤية هذا)
+        </div>
+      )}
         <div className="post-meta">
           <span className="post-type-badge">
             {postTypeLabels[post.type]}

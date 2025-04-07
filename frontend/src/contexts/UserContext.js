@@ -6,6 +6,7 @@ export const UserProvider = ({ children }) => {
         name: 'محمد أحمد',
         email: 'mohamed@example.com',
         password: '',
+        isAdmin: true,
         profilePic: DEFAULT_PROFILE_IMAGE,
         education: {
             college: 'جامعة الأهلية الفلسطينية',
@@ -17,7 +18,7 @@ export const UserProvider = ({ children }) => {
             company: 'شركة التقنية الحديثة',
             title: 'مهندس برمجيات',
             duration: '2020 - الحاضر'
-        }
+        },
     });
   
     return (

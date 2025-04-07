@@ -2,9 +2,16 @@ import "./community.css"
 import { useState } from "react";
 import CreatePost from "../../components/CreatePost/createPost.component";
 import PostCard from "../../components/PostCard/postCard";
+import { useUser } from "../../contexts/UserContext";
 
 const Community = () => {
     const [posts, setPosts] = useState([]);
+    const {user} = useUser();
+    const visiblePosts = posts.filter(post => 
+        post.status === 'approved' || 
+        post.author === user.name || 
+        user.isAdmin
+      );
 
     const handlePostSubmit = (newPost) => {
         newPost.status = 'pending';
@@ -18,8 +25,8 @@ const Community = () => {
       <CreatePost onPostSubmit={handlePostSubmit} />
       
       <div className="posts-list">
-        {posts.length > 0 ? (
-          posts.map(post => (
+        {visiblePosts.length > 0 ? (
+          visiblePosts.map(post => (
             <PostCard key={post.id} post={post} />
           ))
         ) : (
