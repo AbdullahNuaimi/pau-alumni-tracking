@@ -24,6 +24,8 @@ function App() {
             <Route path='/ProfilePage' element={<ProfilePage />} />
             <Route path="/community" element={<Community />} />
             <Route path="/community/:postId" element={<ViewPost />} />
+            <Route path="/community/jobs" element={<Community />} />
+            <Route path="/community/success-stories" element={<Community />} />
           </Routes>
         </BrowserRouter>
       </UserProvider>

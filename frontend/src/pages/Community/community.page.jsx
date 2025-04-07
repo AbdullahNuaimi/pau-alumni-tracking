@@ -1,18 +1,38 @@
 import "./community.css"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CreatePost from "../../components/CreatePost/createPost.component";
 import PostCard from "../../components/PostCard/postCard";
 import { useUser } from "../../contexts/UserContext";
 import { examplePosts } from "../../assets/metPosts";
+import { useLocation } from "react-router-dom";
+
 const Community = () => {
     const [posts, setPosts] = useState([...examplePosts]);
     const { user } = useUser();
     const [activeFilter, setActiveFilter] = useState('all');
-
-    const visiblePosts = posts.filter(post =>
-        (post.status === 'approved' || post.author === user.name || user.isAdmin) &&
-        (activeFilter === 'all' || post.type === activeFilter)
-    );
+    const location = useLocation();
+    useEffect(() => {
+        console.log(location.pathname);
+        if (location.pathname === '/community/jobs') {
+            setActiveFilter('job');
+        } else if (location.pathname === '/community/success-stories') {
+            setActiveFilter('success');
+        } else {
+            setActiveFilter('all');
+        }
+    }, [location.pathname]);
+    const visiblePosts = posts.filter(post => {
+        const statusMatch = 
+          activeFilter === 'pending' ? 
+          post.status === 'pending' : 
+          (post.status === 'approved' || post.author === user.name || user.isAdmin);
+        
+        const typeMatch = 
+          ['all', 'pending'].includes(activeFilter) || 
+          post.type === activeFilter;
+        
+        return statusMatch && typeMatch;
+      });
 
     const handlePostSubmit = (newPost) => {
         newPost.status = 'pending';
@@ -25,7 +45,8 @@ const Community = () => {
         { id: 'general', label: 'عام' },
         { id: 'announcement', label: 'إعلانات' },
         { id: 'job', label: 'وظائف' },
-        { id: 'success', label: 'قصص نجاح' }
+        { id: 'success', label: 'قصص نجاح' },
+        ...(user.isAdmin ? [{ id: 'pending', label: 'قيد المراجعة' }] : [])
     ];
 
     const handleApprove = (postId) => {

@@ -14,9 +14,9 @@ const NavigationBar = () => {
         <ul>
             <li><a onClick={()=>navigate("dashboard")}><i className="fa fa-home"></i> الرئيسية</a></li>
             <li><a onClick={()=>navigate("community")} ><i className="fa fa-comments"></i> المنتدى</a></li>
-            <li><a onClick={()=>navigate("community")}><i className="fa fa-briefcase"></i> وظائف شاغرة</a></li>
+            <li><a onClick={()=>navigate("community/jobs")}><i className="fa fa-briefcase"></i> وظائف شاغرة</a></li>
             <li><a onClick={()=> navigate("GraduationBook")}><i className="fa fa-book"></i> طلب كتاب التخرج</a></li>
-            <li><a onClick={()=>navigate("community")}><i className="fa fa-star"></i> قصص نجاح</a></li>
+            <li><a onClick={()=>navigate("community/success-stories")}><i className="fa fa-star"></i> قصص نجاح</a></li>
             <li><a onClick={()=>navigate("ProfilePage")}><i className="fa fa-user"></i> إعدادات المستخدم</a></li>
             <li><a onClick={()=> navigate("/")}><i className="fa fa-sign-out-alt"></i> تسجيل الخروج</a></li>
         </ul>
