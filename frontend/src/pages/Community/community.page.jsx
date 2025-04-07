@@ -12,7 +12,6 @@ const Community = () => {
     const [activeFilter, setActiveFilter] = useState('all');
     const location = useLocation();
     useEffect(() => {
-        console.log(location.pathname);
         if (location.pathname === '/community/jobs') {
             setActiveFilter('job');
         } else if (location.pathname === '/community/success-stories') {
