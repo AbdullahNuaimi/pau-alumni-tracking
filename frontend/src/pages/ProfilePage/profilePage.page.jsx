@@ -1,15 +1,51 @@
-import { useState } from 'react';
-import './profilePage.css'; // RTL stylesheet
+import { useState, useEffect } from 'react';
+import './profilePage.css'; 
 import { useUser } from '../../contexts/UserContext';
-
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { registerLocale, setDefaultLocale } from 'react-datepicker';
+import ar from 'date-fns/locale/ar'
+registerLocale('ar', ar); 
 const ProfilePage = () => {
-    const { user, setUser } = useUser(); // Get user data from context
-    const [initialUser,setinitialUser] = useState(user);
+    const { user, setUser } = useUser(); 
+    const [initialUser, setinitialUser] = useState(user);
     const [editMode, setEditMode] = useState(false);
+    const [dateRange, setDateRange] = useState([null, null]);
+    const [startDate, endDate] = dateRange;
+    useEffect(() => {
+        if (user.career?.duration) {
+            const parts = user.career.duration.split(' - ');
+            try {
+                const parsedStart = parts[0] ? new Date(parts[0]) : null;
+                const parsedEnd = parts[1] ? new Date(parts[1]) : null;
+
+                if (!isNaN(parsedStart?.getTime()) && !isNaN(parsedEnd?.getTime())) {
+                    setDateRange([parsedStart, parsedEnd]);
+                }
+            } catch (e) {
+                console.warn("Failed to parse dates:", e);
+            }
+        }
+    }, [user.career?.duration, editMode]);
+    const handleDateChange = (update) => {
+        setDateRange(update);
+
+        const formatDate = (date) =>
+            date ? date.toLocaleDateString('ar-EG') : '';
+
+        const newDuration = `${formatDate(update[0])} - ${formatDate(update[1])}`;
+
+        handleChange({
+            target: {
+                name: 'career.duration',
+                value: newDuration
+            }
+        });
+    };
+
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
-
         if (name.includes('.')) {
             const [parent, child] = name.split('.');
             setUser(prev => ({
@@ -40,7 +76,7 @@ const ProfilePage = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Here you would typically send data to backend
+        // data to backend
         console.log('Updated user data:', user);
         setEditMode(false);
     };
@@ -214,14 +250,26 @@ const ProfilePage = () => {
                             <div className="form-group">
                                 <label>المدة:</label>
                                 {editMode ? (
-                                    <input
-                                        type="text"
-                                        name="career.duration"
-                                        value={user.career.duration}
-                                        onChange={handleChange}
-                                    />
+                                    <div className="date-picker-wrapper">
+                                        <DatePicker
+                                            selectsRange
+                                            startDate={startDate}
+                                            endDate={endDate}
+                                            onChange={handleDateChange}
+                                            locale="ar"
+                                            dateFormat="yyyy/MM/dd"
+                                            placeholderText="اختر الفترة الزمنية"
+                                            className="arabic-date-picker"
+                                            isClearable
+                                            withPortal
+                                            peekNextMonth
+                                            showMonthDropdown
+                                            showYearDropdown
+                                            dropdownMode="select"
+                                        />
+                                    </div>
                                 ) : (
-                                    <p>{user.career.duration}</p>
+                                    <p>{user.career.duration || 'غير محدد'}</p>
                                 )}
                             </div>
                         </>
@@ -235,7 +283,7 @@ const ProfilePage = () => {
                             <button
                                 type="button"
                                 className="cancel-btn"
-                                onClick={() => { handleCancel()}} 
+                                onClick={() => { handleCancel() }}
                             >
                                 إلغاء
                             </button>
