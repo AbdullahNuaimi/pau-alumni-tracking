@@ -7,7 +7,9 @@ const Community = () => {
     const [posts, setPosts] = useState([]);
 
     const handlePostSubmit = (newPost) => {
+        newPost.status = 'pending';
       setPosts([newPost, ...posts]);
+      console.log(newPost);
     };
   return (
     <div className="community-page">

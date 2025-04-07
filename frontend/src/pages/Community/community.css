@@ -151,3 +151,51 @@ background-color: #a52a2a;
     resize: none;
     height: 60px;
 }
+
+/* Add to CommunityPage.css */
+.post-type-selector {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .post-type-selector select {
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+  
+  .post-meta {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 5px;
+  }
+  
+  .post-type-badge {
+    background: #e0f2fe;
+    color: #0369a1;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+  }
+  
+  .post-status {
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+  }
+  
+  /* Style different post types */
+  .post-card[data-type="announcement"] {
+    border-right: 4px solid #f59e0b;
+  }
+  
+  .post-card[data-type="job"] {
+    border-right: 4px solid #10b981;
+  }
+  
+  .post-card[data-type="success"] {
+    border-right: 4px solid #8b5cf6;
+  }

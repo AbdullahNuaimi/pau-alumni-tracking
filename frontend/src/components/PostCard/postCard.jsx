@@ -2,12 +2,38 @@ import { useUser } from "../../contexts/UserContext";
 import './postCard.css';
 const PostCard = ({ post }) => {
   const { user } = useUser();
+  const postTypeLabels = {
+    general: 'عام',
+    announcement: 'إعلان',
+    job: 'فرصة عمل',
+    success: 'قصة نجاح'
+  };
 
+  const statusColors = {
+    pending: 'orange',
+    approved: 'green',
+    rejected: 'red'
+  };
   return (
-    <div className="post-card">
+    <div className="post-card"
+    style={{
+        borderLeft: `4px solid ${statusColors[post.status]}`,
+        opacity: post.status === 'rejected' ? 0.7 : 1
+      }}>
+        <div className="post-meta">
+          <span className="post-type-badge">
+            {postTypeLabels[post.type]}
+          </span>
+          <span className="post-status" style={{
+            backgroundColor: statusColors[post.status]
+          }}>
+            {post.status === 'pending' ? 'قيد المراجعة' : 
+             post.status === 'approved' ? 'مقبول' : 'مرفوض'}
+          </span>
+        </div>
       <div className="post-header">
         <img 
-          src={post.authorImage || '/default-avatar.png'} 
+          src={post.authorImage} 
           alt={post.author} 
           className="post-author-avatar"
         />

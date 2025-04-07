@@ -60,3 +60,7 @@
     color: #65676b;
     padding: 20px;
 }
+
+.post-author-info>h4{
+    margin: 0;
+}

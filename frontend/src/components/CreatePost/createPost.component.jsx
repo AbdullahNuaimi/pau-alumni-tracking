@@ -1,13 +1,42 @@
+import './createPost.css'; 
 import { useState, useRef } from 'react';
 import { useUser } from '../../contexts/UserContext';
-import './createPost.css'; 
 
 const CreatePost = ({ onPostSubmit }) => {
   const { user } = useUser();
   const [postText, setPostText] = useState('');
+  const [postType, setPostType] = useState('general');
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
 
+  const postTypes = [
+    { value: 'general', label: 'منشور عام' },
+    { value: 'announcement', label: 'إعلان' },
+    { value: 'job', label: 'فرصة عمل' },
+    { value: 'success', label: 'قصة نجاح' }
+  ];
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!postText.trim() && !imagePreview) return;
+
+    const newPost = {
+      id: Date.now(),
+      author: user.name,
+      authorImage: user.profilePic,
+      content: postText,
+      image: imagePreview,
+      type: postType,
+      status: 'pending', // Default status
+      date: new Date().toLocaleDateString('ar-EG'),
+    };
+
+    onPostSubmit(newPost);
+    setPostText('');
+    setPostType('general');
+    setImagePreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -18,27 +47,6 @@ const CreatePost = ({ onPostSubmit }) => {
       reader.readAsDataURL(file);
     }
   };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!postText.trim() && !imagePreview) return;
-
-    const newPost = {
-      id: Date.now(),
-      author: user.name,
-      authorImage: user.profilePic,
-      title: postText.slice(0, 30) + (postText.length > 30 ? '...' : ''),
-      content: postText,
-      image: imagePreview,
-      date: new Date().toLocaleDateString('ar-EG'),
-    };
-
-    onPostSubmit(newPost);
-    setPostText('');
-    setImagePreview(null);
-    if (fileInputRef.current) fileInputRef.current.value = '';
-  };
-
   return (
     <div className="create-post">
       <form onSubmit={handleSubmit}>
@@ -56,7 +64,19 @@ const CreatePost = ({ onPostSubmit }) => {
             className="post-textbox"
           />
         </div>
-
+        <div className="post-type-selector">
+          <label>نوع المنشور:</label>
+          <select 
+            value={postType} 
+            onChange={(e) => setPostType(e.target.value)}
+          >
+            {postTypes.map((type) => (
+              <option key={type.value} value={type.value}>
+                {type.label}
+              </option>
+            ))}
+          </select>
+        </div>
         {imagePreview && (
           <div className="image-preview">
             <img src={imagePreview} alt="معاينة الصورة" />
