@@ -1,6 +1,6 @@
 import { useUser } from "../../contexts/UserContext";
 import './postCard.css';
-const PostCard = ({ post }) => {
+const PostCard = ({ post, onApprove, onReject }) => {
   const { user } = useUser();
   const showPendingStatus = (post.status === 'pending' && 
     (post.author === user.name || user.isAdmin));
@@ -16,8 +16,10 @@ const PostCard = ({ post }) => {
     approved: 'green',
     rejected: 'red'
   };
+  const isAdmin = user.isAdmin;
+  const isPending = post.status === 'pending';
   return (
-    <div className={`post-card ${post.status}`}
+    <div className={`post-card ${post.status} ${post.type}`}
     style={{
         borderLeft: `4px solid ${statusColors[post.status]}`,
         opacity: post.status === 'rejected' ? 0.7 : 1
@@ -25,6 +27,23 @@ const PostCard = ({ post }) => {
         {showPendingStatus && (
         <div className="pending-badge">
           ⏳ قيد المراجعة (فقط أنت والمسؤولون يمكنهم رؤية هذا)
+        </div>
+      )}
+            {(isAdmin && isPending) && (
+        <div className="admin-actions">
+          <h4>إجراءات المسؤول:</h4>
+          <button 
+            onClick={() => onApprove(post.id)}
+            className="approve-btn"
+          >
+            ✅ قبول المنشور
+          </button>
+          <button 
+            onClick={() => onReject(post.id)}
+            className="reject-btn"
+          >
+            ❌ رفض المنشور
+          </button>
         </div>
       )}
         <div className="post-meta">

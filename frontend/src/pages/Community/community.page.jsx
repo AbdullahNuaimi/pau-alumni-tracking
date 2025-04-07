@@ -6,35 +6,70 @@ import { useUser } from "../../contexts/UserContext";
 
 const Community = () => {
     const [posts, setPosts] = useState([]);
-    const {user} = useUser();
-    const visiblePosts = posts.filter(post => 
-        post.status === 'approved' || 
-        post.author === user.name || 
-        user.isAdmin
-      );
+    const { user } = useUser();
+    const [activeFilter, setActiveFilter] = useState('all');
+
+    const visiblePosts = posts.filter(post =>
+        (post.status === 'approved' || post.author === user.name || user.isAdmin) &&
+        (activeFilter === 'all' || post.type === activeFilter)
+    );
 
     const handlePostSubmit = (newPost) => {
         newPost.status = 'pending';
-      setPosts([newPost, ...posts]);
-      console.log(newPost);
+        setPosts([newPost, ...posts]);
+        console.log(newPost);
     };
-  return (
-    <div className="community-page">
-      <h1>المجتمع الأكاديمي</h1>
-      
-      <CreatePost onPostSubmit={handlePostSubmit} />
-      
-      <div className="posts-list">
-        {visiblePosts.length > 0 ? (
-          visiblePosts.map(post => (
-            <PostCard key={post.id} post={post} />
-          ))
-        ) : (
-          <p className="no-posts">لا توجد منشورات بعد. كن أول من ينشر!</p>
-        )}
-      </div>
-    </div>
-  );
+
+    const postFilters = [
+        { id: 'all', label: 'الكل' },
+        { id: 'general', label: 'عام' },
+        { id: 'announcement', label: 'إعلانات' },
+        { id: 'job', label: 'وظائف' },
+        { id: 'success', label: 'قصص نجاح' }
+    ];
+
+    const handleApprove = (postId) => {
+        setPosts(posts.map(post =>
+            post.id === postId ? { ...post, status: 'approved' } : post
+        ));
+        // Add API call here to update backend
+    };
+
+    const handleReject = (postId) => {
+        setPosts(posts.map(post =>
+            post.id === postId ? { ...post, status: 'rejected' } : post
+        ));
+        // Add API call here to update backend
+    };
+
+    return (
+        <div className="community-page">
+            <h1>المجتمع الأكاديمي</h1>
+
+            <CreatePost onPostSubmit={handlePostSubmit} />
+            {/* Filter Tabs */}
+            <div className="post-filters">
+                {postFilters.map(filter => (
+                    <button
+                        key={filter.id}
+                        className={`filter-tab ${activeFilter === filter.id ? 'active' : ''}`}
+                        onClick={() => setActiveFilter(filter.id)}
+                    >
+                        {filter.label}
+                    </button>
+                ))}
+            </div>
+            <div className="posts-list">
+                {visiblePosts.length > 0 ? (
+                    visiblePosts.map(post => (
+                        <PostCard key={post.id} post={post} onApprove={handleApprove} onReject={handleReject} />
+                    ))
+                ) : (
+                    <p className="no-posts">لا توجد منشورات بعد. كن أول من ينشر!</p>
+                )}
+            </div>
+        </div>
+    );
 };
 
 export default Community;
