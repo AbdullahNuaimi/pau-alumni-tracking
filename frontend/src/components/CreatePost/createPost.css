@@ -1,0 +1,75 @@
+  .create-post {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .post-input {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+  }
+
+  .author-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+  }
+
+  .post-textbox {
+      flex: 1;
+      padding: 10px 15px;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      outline: none;
+  }
+
+  .post-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+  }
+
+  .upload-btn,
+  .post-btn {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+  }
+
+  .upload-btn {
+      background: #f0f2f5;
+  }
+
+  .post-btn {
+      background: #1877f2;
+      color: white;
+  }
+
+  .image-preview {
+      margin: 10px 0;
+      position: relative;
+  }
+
+  .image-preview img {
+      max-width: 100%;
+      max-height: 300px;
+      border-radius: 8px;
+  }
+
+  .remove-image-btn {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+  }
