@@ -102,3 +102,100 @@
     background: #ede9fe;
     color: #6d28d9;
   }
+
+  /* Add these styles to your existing CSS */
+
+/* Post Actions */
+.post-actions {
+  display: flex;
+  gap: 15px;
+  padding: 10px 0;
+  border-top: 1px solid #eee;
+  margin-top: 10px;
+}
+
+.post-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.like-btn.liked {
+  color: #e91e63;
+}
+
+.back-btn {
+  margin-right: auto;
+  color: #1877f2;
+  text-decoration: none;
+}
+
+/* Comments Section */
+.comments-section {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px dashed #ddd;
+}
+
+.comment-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.comment-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+}
+
+.comment-submit-btn {
+  background: #1877f2;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.comment {
+  padding: 10px;
+  margin: 5px 0;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.comment-header {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.comment-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.comment-content {
+  margin: 5px 0 0 0;
+  color: #333;
+}
+
+.no-comments {
+  text-align: center;
+  color: #65676b;
+  padding: 10px;
+}
+
+/* Detailed View Specific */
+.post-card.detailed .comments-section {
+  display: block !important;
+}

@@ -29,6 +29,8 @@ const CreatePost = ({ onPostSubmit }) => {
       type: postType,
       status: 'pending', // Default status
       date: new Date().toLocaleDateString('ar-EG'),
+      likes: [], 
+      comments: []
     };
 
     onPostSubmit(newPost);

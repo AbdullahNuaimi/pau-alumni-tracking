@@ -3,6 +3,7 @@ import { DEFAULT_PROFILE_IMAGE } from '../assets/defaultPfpBase64';
 const UserContext = createContext();
 export const UserProvider = ({ children }) => {
     const [user, setUser] = useState({
+        id: 1234567,
         name: 'محمد أحمد',
         email: 'mohamed@example.com',
         password: '',

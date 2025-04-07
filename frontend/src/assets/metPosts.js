@@ -13,7 +13,18 @@ export const examplePosts = [
       salary: "٣٠٠٠-٤٠٠٠ شيكل",
       tags: ["وظائف", "تكنولوجيا"],
       image: "https://img.freepik.com/free-vector/man-search-hiring-job-online-from-laptop_1150-52728.jpg" // Job search photo
-    }
+    },
+    likes: [], 
+    comments: [
+      {
+        id: 1,
+        author: 'أحمد محمد',
+        authorId: 'user1_id',
+        authorImage: 'https://i.imgur.com/3Q6ZQYm.png',
+        content: 'تهانينا! هذا إنجاز رائع',
+        date: '١٥ يونيو ٢٠٢٣'
+      }
+    ]
   },
   {
     id: 2,
@@ -28,7 +39,18 @@ export const examplePosts = [
       university: "هارفارد",
       major: "هندسة الحاسوب",
       image: "https://ual-media-res.cloudinary.com/image/fetch/c_fill,f_auto,fl_lossy,q_auto,w_2000,g_auto,g_auto/https://www.arts.ac.uk/__data/assets/image/0027/446724/R6AC3315.jpg" // Graduation photo
-    }
+    },
+    likes: [], 
+    comments: [
+      {
+        id: 1,
+        author: 'أحمد محمد',
+        authorId: 'user1_id',
+        authorImage: 'https://i.imgur.com/3Q6ZQYm.png',
+        content: 'تهانينا! هذا إنجاز رائع',
+        date: '١٥ يونيو ٢٠٢٣'
+      }
+    ]
   },
   {
     id: 3,
@@ -43,6 +65,17 @@ export const examplePosts = [
       time: "١٠ صباحاً - ١٢ ظهراً",
       location: "المبنى الرئيسي - قاعة المؤتمرات",
       image: "https://st2.depositphotos.com/3591429/5246/i/450/depositphotos_52466041-stock-illustration-business-people-at-the-meeting.jpg" // Workshop photo
-    }
+    },
+    likes: [],
+    comments: [
+      {
+        id: 1,
+        author: 'أحمد محمد',
+        authorId: 'user1_id',
+        authorImage: 'https://i.imgur.com/3Q6ZQYm.png',
+        content: 'تهانينا! هذا إنجاز رائع',
+        date: '١٥ يونيو ٢٠٢٣'
+      }
+    ]
   }
 ];
