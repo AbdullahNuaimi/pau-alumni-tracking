@@ -3,9 +3,9 @@ import { useState } from "react";
 import CreatePost from "../../components/CreatePost/createPost.component";
 import PostCard from "../../components/PostCard/postCard";
 import { useUser } from "../../contexts/UserContext";
-
+import { examplePosts } from "../../assets/metPosts";
 const Community = () => {
-    const [posts, setPosts] = useState([]);
+    const [posts, setPosts] = useState([...examplePosts]);
     const { user } = useUser();
     const [activeFilter, setActiveFilter] = useState('all');
 
