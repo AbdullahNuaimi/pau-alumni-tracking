@@ -1,0 +1,62 @@
+.post-card {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.post-author-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.post-date {
+    color: #65676b;
+    font-size: 0.8rem;
+}
+
+.post-content p {
+    margin: 10px 0;
+}
+
+.post-image {
+    max-width: 100%;
+    max-height: 400px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.post-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.post-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #65676b;
+}
+
+.delete-btn {
+    color: #ff4d4f !important;
+}
+
+.no-posts {
+    text-align: center;
+    color: #65676b;
+    padding: 20px;
+}
