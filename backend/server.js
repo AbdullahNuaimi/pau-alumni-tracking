@@ -3,11 +3,13 @@ import morgan from 'morgan';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
-// import errorHandler from './middlewares/errorHandler.js';
 
 // Routes
-// import authRoutes from './routes/authRoutes.js';
-// import postRoutes from './routes/postRoutes.js';
+import { authRoutes } from './routes/authRoutes.js';
+import { postRoutes } from './routes/postRoutes.js';
+import { commentRoutes } from './routes/commentRoutes.js';
+import { userRoutes } from './routes/userRoutes.js';
+import errorHandler from './middlewares/errorHandler.js';
 
 dotenv.config({ path: './config/config.env' });
 
@@ -27,8 +29,10 @@ app.use((req, res, next) => {
 });
 
 // Routes
-// app.use('/api/v1/auth', authRoutes);
-// app.use('/api/v1/posts', postRoutes);
+app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/posts', postRoutes);
+app.use('/api/v1/comments', commentRoutes);
+app.use('/api/v1/users', userRoutes);
 
 // Error handling
 // app.use(errorHandler);

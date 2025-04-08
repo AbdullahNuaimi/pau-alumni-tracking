@@ -3,33 +3,49 @@ import mongoose from 'mongoose';
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'الاسم مطلوب'],
+    required: true,
     trim: true
   },
   email: {
     type: String,
-    required: [true, 'البريد الإلكتروني مطلوب'],
+    required: true,
     unique: true,
-    match: [/^\S+@\S+\.\S+$/, 'البريد الإلكتروني غير صالح']
+    match: /^\S+@\S+\.\S+$/,
+  },
+  phone: {
+    type: String,
+    match: /^\+?\d{10,15}$/,
   },
   password: {
     type: String,
-    required: [true, 'كلمة المرور مطلوبة'],
-    minlength: [8, 'يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل']
+    required: true,
+    minlength: 8
   },
   role: {
     type: String,
     enum: {
-      values: ['user', 'admin'],
-      message: 'الدور يجب أن يكون إما user أو admin'
+      values: ['user','admin', 'superadmin'],
     },
     default: 'user'
   },
-  // Arabic-specific fields
   universityId: {
     type: String,
-    match: [/^\d{7}$/, 'رقم الجامعة يجب أن يكون 7 أرقام']
-  }
+    match:/^\d{7}$/,
+    required: true
+  },
+  education:{
+    type: Array,
+    default: [],
+  },
+  career:{
+    type: Array,
+    default: [],
+  },
+  posts: {
+    type: Array,
+    default: [],
+  },
 }, { timestamps: true });
+userSchema.index({ email: 1, universityId: 1 });
 
 export default mongoose.model('User', userSchema);
