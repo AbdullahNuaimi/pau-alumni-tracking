@@ -7,17 +7,17 @@ export const usersList = [
         password: 'Tech2024!',
         isAdmin: true,
         profilePic: DEFAULT_PROFILE_IMAGE,
-        education: {
+        education: [{
             college: 'جامعة الأهلية الفلسطينية',
             major: 'هندسة الحاسوب',
             degree: 'بكالوريوس'
-        },
-        career: {
+        }],
+        career: [{
             employed: true,
             company: 'شركة التقنية الحديثة',
             title: 'مهندس برمجيات',
             duration: '2020 - الحاضر'
-        }
+        }]
     },
     {
         id: 1000002,
@@ -26,17 +26,17 @@ export const usersList = [
         password: 'Codegirl9',
         isAdmin: false,
         profilePic: DEFAULT_PROFILE_IMAGE,
-        education: {
+        education: [{
             college: 'جامعة القدس',
             major: 'علوم الحاسوب',
             degree: 'بكالوريوس'
-        },
-        career: {
+        }],
+        career: [{
             employed: false,
             company: '',
             title: '',
             duration: ''
-        }
+        }]
     },
     {
         id: 1000003,
@@ -45,17 +45,17 @@ export const usersList = [
         password: 'DevPower7',
         isAdmin: false,
         profilePic: DEFAULT_PROFILE_IMAGE,
-        education: {
+        education: [{
             college: 'جامعة بيرزيت',
             major: 'هندسة أنظمة الحاسوب',
             degree: 'بكالوريوس'
-        },
-        career: {
+        }],
+        career: [{
             employed: true,
             company: 'شركة حلول النخبة',
             title: 'مطور نظم',
             duration: '2019 - الحاضر'
-        }
+        }]
     },
     {
         id: 1000004,
@@ -64,16 +64,16 @@ export const usersList = [
         password: 'SecurePass3',
         isAdmin: true,
         profilePic: DEFAULT_PROFILE_IMAGE,
-        education: {
+        education: [{
             college: 'الجامعة العربية الأمريكية',
             major: 'هندسة البرمجيات',
             degree: 'بكالوريوس'
-        },
-        career: {
+        }],
+        career: [{
             employed: true,
             company: 'شركة داتا تك',
             title: 'محللة نظم',
             duration: '2021 - الحاضر'
-        }
+        }]
     }
 ];
