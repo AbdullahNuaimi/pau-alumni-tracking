@@ -63,7 +63,7 @@ export const login = async (req, res, next) => {
 
     const user = await User.findOne({ email }).select('+password');
 
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    if (!user || (password !== user.password)) {
       return res.status(401).json({
         success: false,
         message: 'البريد الإلكتروني أو كلمة المرور غير صحيحة'
@@ -75,7 +75,10 @@ export const login = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: 'تم تسجيل الدخول بنجاح',
-      token
+      token,
+      data: {
+        user: user
+      }
     });
 
   } catch (err) {

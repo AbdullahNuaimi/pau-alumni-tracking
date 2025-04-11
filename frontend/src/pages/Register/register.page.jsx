@@ -2,6 +2,9 @@ import "./register.css"
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { DEFAULT_PROFILE_IMAGE } from "../../assets/defaultPfpBase64";
+import { register } from "../../services/authService";
+
+
 const Register = () => {
   const navigate = useNavigate();
   const [name, setName] = useState('');
@@ -10,13 +13,14 @@ const Register = () => {
     const [universityId, setUniversityId] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [errors, setErrors] = useState({ email: '', password: '', confirmPassword: '', universityId: '', name: '' });
+    const [error, setError] = useState('');
     
     const validateEmail = (input) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input);
     const validatePassword = (input) => /^(?=.*\d).{8,}$/.test(input);
     const validateUniversityId = (input) => /^\d{7}$/.test(input); 
     const validateName = (input) => /^[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF\u0041-\u005A\u0061-\u007A ]+$/u.test(input); 
   
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
       e.preventDefault();
       const isEmailValid = validateEmail(email);
       const isPasswordValid = validatePassword(password);
@@ -32,23 +36,13 @@ const Register = () => {
       });
   
       if (isEmailValid && isPasswordValid && isUniversityIdValid && password === confirmPassword && isNameValid) {
-        // console.log('Form submitted:', { email, password, universityId, confirmPassword});
-        const newUser = {
-          id: universityId,
-          name: name,
-          email: email,
-          password: password,
-          phone: '',
-          role: 'user',
-          isAdmin: false, 
-          profilePic: DEFAULT_PROFILE_IMAGE,
-          education: [],
-          career: [],
-          registerDate: new Date().toISOString(),
-        };
-        console.log('New user:', newUser);
-        // navigate('/');
-
+        const result = await register({name: name,email: email,password: password,universityId: universityId});
+        console.log('Registration result:', result);
+        if (result.success) {
+          navigate('/');
+        } else {
+          setError(result.message);
+        }
       }
     };
   return (

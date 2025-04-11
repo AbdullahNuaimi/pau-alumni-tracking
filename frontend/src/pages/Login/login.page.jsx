@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { usersList } from "../../assets/users";
 import { useUser } from "../../contexts/UserContext";
+import { login } from "../../services/authService";
 const Login = () => {
   const { setUser } = useUser();
   const [wrong, setWrong] = useState(false);
@@ -16,7 +17,7 @@ const Login = () => {
   const validateEmail = (input) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input);
   const validatePassword = (input) => /^(?=.*\d).{8,}$/.test(input);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const isEmailValid = validateEmail(email);
     const isPasswordValid = validatePassword(password);
@@ -25,13 +26,13 @@ const Login = () => {
       email: isEmailValid ? '' : 'بريد غير صحيح',
       password: isPasswordValid ? '' : 'كلمة المرور يجب أن تحتوي على 8 أحرف على الأقل ورقم واحد',
     });
-    const user = usersList.find(user => user.email === email && user.password === password);
-    if (!user) {
+    // const user = usersList.find(user => user.email === email && user.password === password);
+    const result = await login({email: email, password: password});
+    if (!result.success) {
       setWrong(true);
     }
-    if (isEmailValid && isPasswordValid && user) {
-      console.log('Form submitted:', { email, password });
-      setUser(user);
+    if (isEmailValid && isPasswordValid && result.success) {
+      setUser(result.user);
       navigate('/dashboard');
     }
   };
