@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-// Set base URL
+
 axios.defaults.baseURL = 'http://localhost:5000/api/v1';
 
 // Set auth token for requests
@@ -14,7 +14,7 @@ export const setAuthToken = (token) => {
   }
 };
 
-// Initialize auth token if exists
+
 const token = localStorage.getItem('token');
 if (token) {
   setAuthToken(token);
