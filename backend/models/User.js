@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { DEFAULT_PROFILE_IMAGE } from '../assets/defaultPfpBase64.js';
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -15,6 +16,10 @@ const userSchema = new mongoose.Schema({
   phone: {
     type: String,
     match: /^\+?\d{10,15}$/,
+  },
+  profilePic: {
+    type: String,
+    default: DEFAULT_PROFILE_IMAGE,
   },
   password: {
     type: String,
@@ -33,18 +38,23 @@ const userSchema = new mongoose.Schema({
     match:/^\d{7}$/,
     required: true
   },
-  education:{
-    type: Array,
-    default: [],
-  },
-  career:{
-    type: Array,
-    default: [],
-  },
-  posts: {
-    type: Array,
-    default: [],
-  },
+  education: [{
+    degree: { type: String, required: true },
+    major: { type: String, required: true },
+    university: String,
+    year: Number
+  }],
+  career: [{
+    company: String,
+    position: String,
+    startDate: Date,
+    endDate: Date,
+    currentlyWorking: Boolean
+  }],
+  posts: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Post'
+  }]
 }, { timestamps: true });
 userSchema.index({ email: 1, universityId: 1 });
 
