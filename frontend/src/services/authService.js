@@ -49,8 +49,30 @@ export const login = async (credentials) => {
 };
 
 // Logout User
-export const logout = () => {
-  localStorage.removeItem('user');
-  localStorage.removeItem('token');
-  delete axios.defaults.headers.common['Authorization'];
-};
+export const logout = async (callApi = false) => {
+    try {
+      if (callApi) {
+        await axios.post(`${API_URL}/logout`);
+      }
+  
+
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      delete axios.defaults.headers.common['Authorization'];
+      
+      return { 
+        success: true,
+        message: 'تم تسجيل الخروج بنجاح' 
+      };
+    } catch (err) {
+
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      delete axios.defaults.headers.common['Authorization'];
+      
+      return {
+        success: false,
+        message: 'تم تسجيل الخروج محلياً ولكن حدث خطأ في الخروج من الخادم'
+      };
+    }
+  };
