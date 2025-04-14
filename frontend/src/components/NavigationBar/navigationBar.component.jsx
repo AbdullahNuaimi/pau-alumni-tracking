@@ -11,7 +11,7 @@ const NavigationBar = () => {
     const handleLogout = async () => {
         const result = await logout(true);
         if (result.success) {
-            setUser(null);
+            // setUser(null);
             navigate("/");
         }
     }
