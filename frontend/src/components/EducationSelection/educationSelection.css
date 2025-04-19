@@ -1,0 +1,57 @@
+.university-dropdowns {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+  
+  .dropdown {
+    margin-bottom: 15px;
+  }
+  
+  .dropdown label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .dropdown select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .dropdown select:disabled {
+    background-color: #f5f5f5;
+    color: #999;
+  }
+  .edu-select-delete-entry-btn{
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px; 
+}
+.edu-select-delete-entry-btn:active{
+    font-size: 15px;
+    transition: all 0.2s;
+    user-select: none;
+
+}
+
+  .education-list ul, .education-list li {
+    list-style: none; 
+    margin: 0;
+    padding: 0;
+  }
+  .education-list li{
+    margin-top: 15px;
+    background-color: #f1f1f1;
+    border-radius: 20px;
+    padding-right: 5px;
+    display: flex;
+    flex-direction: column;
+  }

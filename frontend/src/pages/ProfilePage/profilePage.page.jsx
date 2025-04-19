@@ -334,19 +334,6 @@ const ProfilePage = () => {
                             </a>
                         </div>
                     )}
-
-                    {editMode && (
-                        <div className="form-group">
-                            <label>كلمة المرور الجديدة:</label>
-                            <input
-                                type="password"
-                                name="password"
-                                value={user.password || ''}
-                                onChange={handleChange}
-                                placeholder="اتركها فارغة إذا لم ترغب في التغيير"
-                            />
-                        </div>
-                    )}
                 </div>
 
                 <div className="section">

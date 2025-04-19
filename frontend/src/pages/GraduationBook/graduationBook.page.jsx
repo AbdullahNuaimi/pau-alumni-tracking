@@ -9,7 +9,7 @@ const GraduationBook = () => {
     <div className="request-form">
         <h3>إرسال طلب للحصول على كتاب التخرج</h3>
         <form>
-            <label for="name">اسم الخريج</label>
+            <label htmlFor="name">اسم الخريج</label>
             <input type="text" id="name" name="name" required placeholder="الاسم الرباعي" />
 
             <label for="grad-year">سنة التخرج</label>

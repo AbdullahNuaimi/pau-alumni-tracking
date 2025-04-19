@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import e from 'express';
 
 
 const signToken = (id) => {
@@ -87,3 +88,28 @@ export const logout = (req, res) => {
     message: 'تم تسجيل الخروج بنجاح'
   });
 };
+
+export const updateEducation = (req,res)=>{
+  const {id, education} = req.body;
+  console.log("id: " , id)
+  console.log("education: " , education)
+  User.findByIdAndUpdate(id,{$set:{education:education}}).then((user)=>{
+    if(!user){
+      return res.status(404).json({
+        success: false,
+        message: 'لم يتم العثور على المستخدم'
+      });
+    }
+  }).catch((err)=>{
+    console.error(err);
+    return res.status(500).json({
+      success: false,
+      message: 'حدث خطأ أثناء تحديث البيانات'
+    });
+  });
+
+  return res.status(200).json({
+    success: true,
+    message: 'تم تحديث البيانات بنجاحط',
+  });
+}

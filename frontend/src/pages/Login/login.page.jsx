@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useUser } from "../../contexts/UserContext";
 import { login } from "../../services/authService";
-import { ToastContainer, toast, Bounce } from 'react-toastify'
+import { toast, Bounce } from 'react-toastify'
 const Login = () => {
-  const { setUser } = useUser();
+  const { user,setUser } = useUser();
   const [wrong, setWrong] = useState(false);
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
@@ -43,7 +43,8 @@ const Login = () => {
       setWrong(true);
     }
     if (isEmailValid && isPasswordValid && result.success) {
-      setUser(result.user);
+      setUser(JSON.parse(localStorage.getItem("user")));
+      console.log("user from local storage: ", user);
       notify()
       navigate('/dashboard');
     }
@@ -56,12 +57,12 @@ const Login = () => {
         <h2>تسجيل الدخول</h2>
         <form onSubmit={handleSubmit}>
           <div className="input-group">
-            <label for="email">البريد الإلكتروني</label>
+            <label htmlFor="email">البريد الإلكتروني</label>
             <input type="text" id="email" name="email" onChange={(e) => setEmail(e.target.value)} />
             {errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
           </div>
           <div className="input-group">
-            <label for="password">كلمة المرور</label>
+            <label htmlFor="password">كلمة المرور</label>
             <input type="password" id="password" name="password" onChange={(e) => setPassword(e.target.value)} />
             {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
           </div>

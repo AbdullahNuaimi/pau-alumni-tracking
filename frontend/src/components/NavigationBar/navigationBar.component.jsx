@@ -2,21 +2,18 @@ import "./navigationBar.css"
 import logo from "../../assets/navigation_bar_logo.png";
 import { useLocation, useNavigate } from "react-router"
 import { logout } from "../../services/authService";
-import { useUser } from "../../contexts/UserContext";
 
 const NavigationBar = () => {
     let location = useLocation();
     let navigate = useNavigate();
-    const { setUser } = useUser();
     const handleLogout = async () => {
         const result = await logout(true);
         if (result.success) {
-            // setUser(null);
             navigate("/");
         }
     }
     return (
-        <div className={location.pathname == "/" || location.pathname == "/register"? 'hidden': ''} >
+        <div className={location.pathname === "/" || location.pathname === "/register"? 'hidden': ''} >
             <div className="sidebar">
         <div className="logo">
             <img src={logo} alt="شعار الجامعة" />

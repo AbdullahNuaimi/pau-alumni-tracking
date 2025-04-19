@@ -29,19 +29,20 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     enum: {
-      values: ['user','admin', 'superadmin'],
+      values: ['user', 'admin', 'superadmin'],
     },
     default: 'user'
   },
   universityId: {
     type: String,
-    match:/^\d{7}$/,
+    match: /^\d{7}$/,
     required: true
   },
   education: [{
-    degree: { type: String, required: true },
+    university: { type: String, required: true },
+    college: { type: String, required: true },
     major: { type: String, required: true },
-    university: String,
+    degree: { type: String, required: true },
     year: Number
   }],
   career: [{

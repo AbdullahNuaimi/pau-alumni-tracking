@@ -2,6 +2,8 @@ import axios from 'axios';
 import { setAuthToken } from './api';
 const API_URL = 'http://localhost:5000/api/v1/auth';
 
+
+
 // Register User
 export const register = async (userData) => {
   try {
@@ -30,11 +32,8 @@ export const login = async (credentials) => {
     
     if (response.data.token) {
       setAuthToken(response.data.token);
-      localStorage.setItem('user', JSON.stringify({
-        id: response.data.data?.user?.id,
-        name: response.data.data?.user?.name,
-        role: response.data.data?.user?.role
-      }));
+      localStorage.setItem('user', JSON.stringify(response.data.data.user));
+      localStorage.setItem('token', response.data.token);
     }
 
     return {
