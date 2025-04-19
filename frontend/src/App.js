@@ -9,10 +9,25 @@ import GraduationBook from './pages/GraduationBook/graduationBook.page';
 import ProfilePage from './pages/ProfilePage/profilePage.page';
 import NavigationBar from './components/NavigationBar/navigationBar.component';
 import { UserProvider } from './contexts/UserContext';
+import { ToastContainer, Bounce } from 'react-toastify';
+
 function App() {
   return (
     <div>
       <UserProvider>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
         <BrowserRouter>
           <NavigationBar />
           <Routes>

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useUser } from "../../contexts/UserContext";
 import { login } from "../../services/authService";
+import { ToastContainer, toast, Bounce } from 'react-toastify'
 const Login = () => {
   const { setUser } = useUser();
   const [wrong, setWrong] = useState(false);
@@ -16,6 +17,18 @@ const Login = () => {
   const validateEmail = (input) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input);
   const validatePassword = (input) => /^(?=.*\d).{8,}$/.test(input);
 
+  const notify = () => toast.success('تم تسجيل الدخول بنجاح', {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: false,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+    transition: Bounce,
+  });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const isEmailValid = validateEmail(email);
@@ -25,12 +38,13 @@ const Login = () => {
       email: isEmailValid ? '' : 'بريد غير صحيح',
       password: isPasswordValid ? '' : 'كلمة المرور يجب أن تحتوي على 8 أحرف على الأقل ورقم واحد',
     });
-    const result = await login({email: email, password: password});
+    const result = await login({ email: email, password: password });
     if (!result.success) {
       setWrong(true);
     }
     if (isEmailValid && isPasswordValid && result.success) {
       setUser(result.user);
+      notify()
       navigate('/dashboard');
     }
   };
