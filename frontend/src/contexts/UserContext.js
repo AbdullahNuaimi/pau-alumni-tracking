@@ -4,7 +4,7 @@ import { DEFAULT_PROFILE_IMAGE } from '../assets/defaultPfpBase64';
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-    const [user, setUser] = useState({
+    const initUser = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {
         id: "",
         name: "",
         email: '',
@@ -17,7 +17,8 @@ export const UserProvider = ({ children }) => {
         resume: null,
         education: [],
         career: []
-    });
+    };
+    const [user, setUser] = useState(initUser);
   
     return (
         <UserContext.Provider value={{ user, setUser }}>
