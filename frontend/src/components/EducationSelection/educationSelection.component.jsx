@@ -48,45 +48,48 @@ const UniversityDropdowns = () => {
     };
 
 
-    const handleEducationEntry = async () => {
+    const updateUserEducation = () => {
+        return new Promise((resolve, reject) => {
+          try {
+            setUser(prevUser => {
+              const newEducation = {
+                university: selectedUniversity,
+                college: selectedCollege,
+                major: selectedMajor,
+                degree: selectedDegree
+              };
+              
+              // Check for duplicate education
+              const educationExists = prevUser.education.some(edu =>
+                edu.university === newEducation.university &&
+                edu.college === newEducation.college &&
+                edu.major === newEducation.major &&
+                edu.degree === newEducation.degree
+              );
+      
+              if (educationExists) {
+                throw new Error('This education already exists!');
+              }
+      
+              const updatedUser = {
+                ...prevUser,
+                education: [...prevUser.education, newEducation]
+              };
+      
+              resolve(updatedUser); // Resolve with the new state
+              return updatedUser;
+            });
+          } catch (error) {
+            reject(error); // Reject if there's an error
+          }
+        });
+      };
 
-        if (user.education == undefined) {
-            setUser(() => ({
-                ...user, education: [
-                    {
-                        university: selectedUniversity,
-                        college: selectedCollege,
-                        major: selectedMajor,
-                        degree: selectedDegree
-                    }]
-            }));
-            console.log("updated user education", user.education);
-            console.log("updated user", user);
-            return;
-        }
-        const result = user.education.find((edu) =>
-            edu.university === selectedUniversity &&
-            edu.college === selectedCollege &&
-            edu.major === selectedMajor &&
-            edu.degree === selectedDegree
-        );
-        if (result) {
-            console.log("This education already exists!");
-            return;
-        }
-        
-        setUser(() => ({
-            ...user, education: [
-                ...user.education, {
-                    university: selectedUniversity,
-                    college: selectedCollege,
-                    major: selectedMajor,
-                    degree: selectedDegree
-                }]
-        }));
-        console.log("updated user education", user.education);
+    const handleEducationEntry = async () => {
+         const updatedUser = await updateUserEducation();
+
         console.log("updated user", user);
-        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("user", JSON.stringify(updatedUser));
 
         const response = await fetch("http://localhost:5000/api/v1/auth/updateEducation", {
             method: "POST",
@@ -95,10 +98,9 @@ const UniversityDropdowns = () => {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             },
             body: JSON.stringify({
-                id: user._id, education: [...user.education]
+                id: updatedUser._id, education: [...updatedUser.education]
             })
         });
-        console.log("response", response);
         if(response.status===200){
             toast("تم تعديل الوضع الاكاديمي", {
                 position: "top-right",
@@ -115,13 +117,41 @@ const UniversityDropdowns = () => {
 
         // Submit to API or perform other actions
     };
-    const handleDeleteEntry = (index) => () => {
+    const handleDeleteEntry = (index) => async() => {
         const updatedEducation = [...user.education];
         updatedEducation.splice(index, 1);
         setUser(() => ({
             ...user,
             education: updatedEducation
         }));
+        const updatedUser = {
+            ...user,
+            education: updatedEducation
+        };
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+        const response = await fetch("http://localhost:5000/api/v1/auth/updateEducation", {
+            method: "POST",
+            headers: {
+                "content-type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({
+                id: updatedUser._id, education: [...updatedUser.education]
+            })
+        });
+        if(response.status===200){
+            toast("تم تعديل الوضع الاكاديمي", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Slide,
+                });
+        }
     }
     return (
         <div className="university-dropdowns">
@@ -197,9 +227,8 @@ const UniversityDropdowns = () => {
                     <ul>
                         {user.education.map((edu, index) => (
                             <li key={index}>
-                                <label onClick={handleDeleteEntry(index)} className='edu-select-delete-entry-btn'>❌    </label>
-                                <br />
-                                {edu.university} <br /> {edu.college} <br /> {edu.major} <br /> {edu.degree}
+                                <label className='edu-select-delete-entry-btn'><span onClick={handleDeleteEntry(index)} >❌</span></label>
+                                {edu.major}  {edu.degree}    
                             </li>
                         ))}
                     </ul>
