@@ -222,3 +222,46 @@ export const updateProfileImage = async (req, res) => {
     });
   }
 };
+
+
+export const updateCareer = async (req, res) => {
+  try {
+    const { id, career } = req.body;
+    
+    if (!id || !career) {
+      return res.status(400).json({
+        success: false,
+        message: 'معرف المستخدم ومعلومات المسار الوظيفي مطلوبة'
+      });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { career },
+      { 
+        new: true,
+        runValidators: true 
+      }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({
+        success: false,
+        message: 'لم يتم العثور على المستخدم'
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'تم تحديث المسار الوظيفي بنجاح',
+      data: updatedUser
+    });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      success: false,
+      message: 'حدث خطأ أثناء تحديث المسار الوظيفي'
+    });
+  }
+};

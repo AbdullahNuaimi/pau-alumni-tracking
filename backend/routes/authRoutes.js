@@ -6,6 +6,7 @@ import {
   updateEducation,
   updateUserInfo,
   updateProfileImage,
+  updateCareer,
 } from '../controllers/authController.js';
 
 const router = express.Router();
@@ -16,6 +17,7 @@ router.post('/logout', logout);
 router.post('/updateEducation', updateEducation);
 router.put('/updateInfo', updateUserInfo);
 router.put('/updateProfileImage', updateProfileImage);
+router.put('/updateCareer', updateCareer);
 // router.post('/forgot-password', forgotPassword);
 // router.patch('/reset-password/:token', resetPassword);
 

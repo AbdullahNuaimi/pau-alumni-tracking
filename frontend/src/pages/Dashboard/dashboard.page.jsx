@@ -2,6 +2,7 @@ import "./dashboard.css"
 import UniversityDropdowns from "../../components/EducationSelection/educationSelection.component";
 import EditUserInfo from "../../components/EditUserInfo/editUserInfo.component";
 import ProfileImageUploader from "../../components/profileImageUploader/profileImageUploader.component";
+import CareerEditor from "../../components/CareerEditor/careerEditor.component";
 
 const Dashboard = () => {
 
@@ -11,6 +12,7 @@ const Dashboard = () => {
       <UniversityDropdowns />
       <EditUserInfo />
       <ProfileImageUploader />
+      <CareerEditor />
     </div> 
   );
 };
