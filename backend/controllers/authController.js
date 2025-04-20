@@ -182,3 +182,43 @@ export const updateUserInfo = async (req, res) => {
     });
   }
 };
+
+
+export const updateProfileImage = async (req, res) => {
+  try {
+    const { id, profilePic } = req.body;
+    
+    if (!id || !profilePic) {
+      return res.status(400).json({
+        success: false,
+        message: 'معرف المستخدم وصورة البروفايل مطلوبان'
+      });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { profilePic },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({
+        success: false,
+        message: 'لم يتم العثور على المستخدم'
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'تم تحديث صورة البروفايل بنجاح',
+      data: updatedUser
+    });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      success: false,
+      message: 'حدث خطأ أثناء تحديث صورة البروفايل'
+    });
+  }
+};
