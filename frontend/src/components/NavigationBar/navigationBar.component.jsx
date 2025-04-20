@@ -1,35 +1,70 @@
-import "./navigationBar.css"
-import logo from "../../assets/navigation_bar_logo.png";
-import { useLocation, useNavigate } from "react-router"
+import { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from "react-router";
 import { logout } from "../../services/authService";
+import { FaHome, FaComments, FaBriefcase, FaBook, FaStar, FaUser, FaSignOutAlt, FaBars, FaTimes } from 'react-icons/fa';
+import "./navigationBar.css";
+import logo from "../../assets/navigation_bar_logo.png";
 
 const NavigationBar = () => {
-    let location = useLocation();
-    let navigate = useNavigate();
+    const location = useLocation();
+    const navigate = useNavigate();
+    const [isOpen, setIsOpen] = useState(false);
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
     const handleLogout = async () => {
         const result = await logout(true);
         if (result.success) {
             navigate("/");
         }
     }
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 768);
+            if (window.innerWidth >= 768) {
+                setIsOpen(false);
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    if (location.pathname === "/" || location.pathname === "/register") {
+        return null;
+    }
+
     return (
-        <div className={location.pathname === "/" || location.pathname === "/register"? 'hidden': ''} >
-            <div className="sidebar">
-        <div className="logo">
-            <img src={logo} alt="شعار الجامعة" />
-            <h2>موقع الخريجين</h2>
-        </div>
-        <ul>
-            <li><a onClick={()=>navigate("dashboard")}><i className="fa fa-home"></i> الرئيسية</a></li>
-            <li><a onClick={()=>navigate("community")} ><i className="fa fa-comments"></i> المنتدى</a></li>
-            <li><a onClick={()=>navigate("community/jobs")}><i className="fa fa-briefcase"></i> وظائف شاغرة</a></li>
-            <li><a onClick={()=> navigate("GraduationBook")}><i className="fa fa-book"></i> طلب كتاب التخرج</a></li>
-            <li><a onClick={()=>navigate("community/success-stories")}><i className="fa fa-star"></i> قصص نجاح</a></li>
-            <li><a onClick={()=>navigate("ProfilePage")}><i className="fa fa-user"></i> إعدادات المستخدم</a></li>
-            <li><a onClick={()=> {handleLogout()}}><i className="fa fa-sign-out-alt"></i> تسجيل الخروج</a></li>
-        </ul>
-    </div>
-        </div>
+        <>
+            {/* Mobile Toggle Button */}
+            {isMobile && (
+                <button className="mobile-toggle" onClick={() => setIsOpen(!isOpen)}>
+                    {isOpen ? <FaTimes /> : <FaBars />}
+                </button>
+            )}
+
+            {/* Navigation Sidebar */}
+            <div className={`sidebar ${isOpen ? 'open' : ''} ${isMobile ? 'mobile' : ''}`}>
+                <div className="logo">
+                    <img src={logo} alt="شعار الجامعة" />
+                    <h2>موقع الخريجين</h2>
+                </div>
+                <ul>
+                    <li><button onClick={() => { navigate("dashboard"); setIsOpen(false); }}><FaHome /> الرئيسية</button></li>
+                    <li><button onClick={() => { navigate("community"); setIsOpen(false); }}><FaComments /> المنتدى</button></li>
+                    <li><button onClick={() => { navigate("community/jobs"); setIsOpen(false); }}><FaBriefcase /> وظائف شاغرة</button></li>
+                    <li><button onClick={() => { navigate("GraduationBook"); setIsOpen(false); }}><FaBook /> طلب كتاب التخرج</button></li>
+                    <li><button onClick={() => { navigate("community/success-stories"); setIsOpen(false); }}><FaStar /> قصص نجاح</button></li>
+                    <li><button onClick={() => { navigate("ProfilePage"); setIsOpen(false); }}><FaUser /> إعدادات المستخدم</button></li>
+                    <li><button onClick={handleLogout}><FaSignOutAlt /> تسجيل الخروج</button></li>
+                </ul>
+            </div>
+
+            {/* Overlay for mobile */}
+            {isMobile && isOpen && (
+                <div className="sidebar-overlay" onClick={() => setIsOpen(false)} />
+            )}
+        </>
     );
 };
 
