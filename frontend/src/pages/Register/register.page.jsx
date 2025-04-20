@@ -1,105 +1,154 @@
-import "./register.css"
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { register } from "../../services/authService";
-import { toast, Bounce } from 'react-toastify'
+import { toast, Bounce } from 'react-toastify';
+import '../../assets/auth.css'
 
 const Register = () => {
   const navigate = useNavigate();
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [universityId, setUniversityId] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [errors, setErrors] = useState({ email: '', password: '', confirmPassword: '', universityId: '', name: '' });
-  const [error, setError] = useState('');
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    universityId: '',
+    password: '',
+    confirmPassword: ''
+  });
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const validateEmail = (input) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input);
   const validatePassword = (input) => /^(?=.*\d).{8,}$/.test(input);
   const validateUniversityId = (input) => /^\d{7}$/.test(input);
   const validateName = (input) => /^[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF\u0041-\u005A\u0061-\u007A ]+$/u.test(input);
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const isEmailValid = validateEmail(email);
-    const isPasswordValid = validatePassword(password);
-    const isUniversityIdValid = validateUniversityId(universityId);
-    const isNameValid = validateName(name);
+    
+    const validationErrors = {
+      name: validateName(formData.name) ? '' : 'الاسم يجب أن يحتوي على أحرف فقط',
+      email: validateEmail(formData.email) ? '' : 'بريد غير صحيح',
+      universityId: validateUniversityId(formData.universityId) ? '' : 'رقم الطالب يجب أن يتكون من 7 أرقام',
+      password: validatePassword(formData.password) ? '' : 'كلمة المرور يجب أن تحتوي على 8 أحرف على الأقل ورقم واحد',
+      confirmPassword: formData.password === formData.confirmPassword ? '' : 'كلمات المرور غير متطابقة'
+    };
 
-    setErrors({
-      email: isEmailValid ? '' : 'بريد غير صحيح',
-      password: isPasswordValid ? '' : 'كلمة المرور يجب أن تحتوي على 8 أحرف على الأقل ورقم واحد',
-      confirmPassword: password === confirmPassword ? '' : 'كلمات المرور غير متطابقة',
-      universityId: isUniversityIdValid ? '' : 'رقم الطالب يجب أن يتكون من 7 أرقام',
-      name: isNameValid ? '' : 'الاسم يجب أن يكون الاسم مكون من احرف فقط',
-    });
+    setErrors(validationErrors);
 
-    if (isEmailValid && isPasswordValid && isUniversityIdValid && password === confirmPassword && isNameValid) {
-      const result = await register({ name: name, email: email, password: password, universityId: universityId });
-      console.log('Registration result:', result);
-      if (result.success) {
-        toast.success(result.message, {
+    if (Object.values(validationErrors).every(error => !error)) {
+      try {
+        setIsLoading(true);
+        const result = await register(formData);
+        
+        if (result.success) {
+          toast.success('تم إنشاء الحساب بنجاح', {
+            position: "top-right",
+            transition: Bounce,
+          });
+          navigate('/');
+        } else {
+          toast.error(result.message || 'حدث خطأ أثناء التسجيل', {
+            position: "top-right",
+            transition: Bounce,
+          });
+        }
+      } catch (error) {
+        toast.error('حدث خطأ أثناء التسجيل', {
           position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
           transition: Bounce,
         });
-        navigate('/');
-      } else {
-        setError(result.message);
-        toast.error(error, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          transition: Bounce,
-        });
+      } finally {
+        setIsLoading(false);
       }
     }
   };
-  return (
-    <div className="register-page">
 
-      <div className="signup-container">
-        <h2>إنشاء حساب جديد</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="input-group">
-            <label for="name">الإسم</label>
-            <input type="text" id="name" name="name" onChange={(e) => { setName(e.target.value) }} />
-            {errors.name && <p style={{ color: 'red' }}>{errors.name}</p>}
+  return (
+    <div className="auth-page">
+      <div className="auth-container">
+        <div className="auth-header">
+          <h2>إنشاء حساب جديد</h2>
+        </div>
+
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="form-group">
+            <label htmlFor="name">الاسم الكامل</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              className={errors.name ? 'error' : ''}
+            />
+            {errors.name && <span className="error-message">{errors.name}</span>}
           </div>
-          <div className="input-group">
-            <label for="email">البريد الإلكتروني</label>
-            <input type="text" id="email" name="email" onChange={(e) => { setEmail(e.target.value) }} />
-            {errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
+
+          <div className="form-group">
+            <label htmlFor="email">البريد الإلكتروني</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className={errors.email ? 'error' : ''}
+            />
+            {errors.email && <span className="error-message">{errors.email}</span>}
           </div>
-          <div className="input-group">
-            <label for="university-id">رقم الطالب الجامعي</label>
-            <input type="text" id="university-id" name="university-id" onChange={(e) => { setUniversityId(e.target.value) }} />
-            {errors.universityId && <p style={{ color: 'red' }}>{errors.universityId}</p>}
+
+          <div className="form-group">
+            <label htmlFor="universityId">رقم الطالب الجامعي</label>
+            <input
+              type="text"
+              id="universityId"
+              name="universityId"
+              value={formData.universityId}
+              onChange={handleChange}
+              className={errors.universityId ? 'error' : ''}
+              maxLength="7"
+            />
+            {errors.universityId && <span className="error-message">{errors.universityId}</span>}
           </div>
-          <div className="input-group">
-            <label for="password">كلمة المرور</label>
-            <input type="password" id="password" name="password" onChange={(e) => { setPassword(e.target.value) }} />
-            {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
+
+          <div className="form-group">
+            <label htmlFor="password">كلمة المرور</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              className={errors.password ? 'error' : ''}
+            />
+            {errors.password && <span className="error-message">{errors.password}</span>}
           </div>
-          <div className="input-group">
-            <label for="confirm-password">تأكيد كلمة المرور</label>
-            <input type="password" id="confirm-password" name="cFonfirm-password" onChange={(e) => { setConfirmPassword(e.target.value) }} />
-            {errors.confirmPassword && <p style={{ color: 'red' }}>{errors.confirmPassword}</p>}
+
+          <div className="form-group">
+            <label htmlFor="confirmPassword">تأكيد كلمة المرور</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              className={errors.confirmPassword ? 'error' : ''}
+            />
+            {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
           </div>
-          <button type="submit" className="signup-btn">إنشاء الحساب</button>
+
+          <button type="submit" className="auth-btn" disabled={isLoading}>
+            {isLoading ? 'جاري إنشاء الحساب...' : 'إنشاء الحساب'}
+          </button>
         </form>
-        <a onClick={() => navigate('/')} className="back-link">لديك حساب بالفعل؟ تسجيل الدخول</a>
+
+        <div className="auth-footer">
+          <span>لديك حساب بالفعل؟ <button className="text-btn" onClick={() => navigate('/')}>تسجيل الدخول</button></span>
+        </div>
       </div>
     </div>
   );

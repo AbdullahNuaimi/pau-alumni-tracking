@@ -8,6 +8,16 @@ body {
   direction: rtl;
 }
 
+body.has-sidebar {
+  margin-right: 250px;
+}
+
+.auth-page .content {
+  margin-right: 0 !important;
+  width: 100% !important;
+}
+
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
