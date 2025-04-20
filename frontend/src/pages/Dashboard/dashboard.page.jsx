@@ -3,6 +3,7 @@ import UniversityDropdowns from "../../components/EducationSelection/educationSe
 import EditUserInfo from "../../components/EditUserInfo/editUserInfo.component";
 import ProfileImageUploader from "../../components/profileImageUploader/profileImageUploader.component";
 import CareerEditor from "../../components/CareerEditor/careerEditor.component";
+import PasswordUpdater from "../../components/PasswordUpdater/passwordUpdater.component";
 
 const Dashboard = () => {
 
@@ -13,6 +14,7 @@ const Dashboard = () => {
       <EditUserInfo />
       <ProfileImageUploader />
       <CareerEditor />
+      <PasswordUpdater />
     </div> 
   );
 };

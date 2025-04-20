@@ -1,7 +1,6 @@
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import e from 'express';
 
 
 const signToken = (id) => {
@@ -263,5 +262,62 @@ export const updateCareer = async (req, res) => {
       success: false,
       message: 'حدث خطأ أثناء تحديث المسار الوظيفي'
     });
+  }
+};
+
+
+export const updatePassword = async (req, res, next) => {
+  try {
+    const { id, currentPassword, newPassword } = req.body;
+
+
+    if (!id || !currentPassword || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'جميع الحقول مطلوبة'
+      });
+    }
+
+
+    const user = await User.findById(id).select('+password');
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'لم يتم العثور على المستخدم'
+      });
+    }
+
+
+    const isPasswordCorrect = await bcrypt.compare(currentPassword, user.password);
+    if (!isPasswordCorrect) {
+      return res.status(401).json({
+        success: false,
+        message: 'كلمة المرور الحالية غير صحيحة'
+      });
+    }
+
+
+    if (await bcrypt.compare(newPassword, user.password)) {
+      return res.status(400).json({
+        success: false,
+        message: 'كلمة المرور الجديدة يجب أن تكون مختلفة عن الحالية'
+      });
+    }
+
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+
+    user.password = hashedPassword;
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: 'تم تحديث كلمة المرور بنجاح'
+    });
+
+  } catch (err) {
+    next(err);
   }
 };
