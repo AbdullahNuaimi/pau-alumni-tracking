@@ -1,115 +1,104 @@
+import { useState } from 'react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 import './comment.css';
 
+const Comment = ({ post, user, onCommentAdded }) => {
+  const [commentText, setCommentText] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showComments, setShowComments] = useState(false);
 
-const Comment = ({post,udpatedPost,setUpdatedPost,commentText,setCommentText,showComments,setShowComments,showLike,setShowLike,user}) => {
-
-
-    const handleLike = () => {
-        const isLiked = post.likes.includes(user.id);
-        if (isLiked) {
-            post.likes = post.likes.filter(id => id !== user.id);
-            setShowLike(false);
-        } else {
-            post.likes = [...post.likes, user.id];
-            setShowLike(true);
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!commentText.trim()) return;
+  
+    setIsSubmitting(true);
+    
+    try {
+      const response = await axios.post(
+        `/api/v1/posts/${post._id}/comments`, // Ensure this matches your route
+        { content: commentText },
+        {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+          }
         }
+      );
+  
+      onCommentAdded(response.data.data);
+      setCommentText('');
+      
+    } catch (error) {
+      console.error('Error adding comment:', error.response?.data || error);
+      toast.error(error.response?.data?.message || 'Failed to add comment');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
-        // Update post (in real app, call API then update context)
-        console.log('Liked post:', post.id);
-    };
+  return (
+    <div className="comment-section">
+      <div className="comment-actions">
+        <button
+          onClick={() => setShowComments(!showComments)}
+          className="toggle-comments-btn"
+        >
+          {showComments ? 'إخفاء التعليقات' : 'عرض التعليقات'} ({post.comments?.length || 0})
+        </button>
+      </div>
 
-    const handleCommentSubmit = (e) => {
-        e.preventDefault();
-        if (!commentText.trim()) return;
+      <form onSubmit={handleSubmit} className="comment-form">
+        <img
+          src={user.profilePic || '/default-avatar.png'}
+          alt="صورة الملف الشخصي"
+          className="comment-avatar"
+        />
+        <input
+          type="text"
+          value={commentText}
+          onChange={(e) => setCommentText(e.target.value)}
+          placeholder="اكتب تعليقاً..."
+          className="comment-input"
+          required
+        />
+        <button 
+          type="submit" 
+          className="comment-submit-btn"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? 'جاري النشر...' : 'نشر'}
+        </button>
+      </form>
 
-        const newComment = {
-            id: Date.now(),
-            author: user.name,
-            authorId: user.id,
-            authorImage: user.profilePic,
-            content: commentText,
-            date: new Date().toLocaleDateString('ar-EG')
-        };
-
-        setUpdatedPost({
-            ...post,
-            comments: [...post.comments, newComment]
-        });
-        post.comments = [...post.comments, newComment];
-        // console.log('New comment:', newComment);
-        console.log('comments:', post.comments);
-        setCommentText('');
-        // API call would go here
-    };
-
-    return (
-        <div>
-            <div className="post-actions">
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        handleLike();
-                    }}
-                    className={`like-btn ${post.likes.includes(user.id) ? 'liked' : ''}`}
-                >
-                    {showLike ? '❤️' : '🤍'} إعجاب ({post.likes.length})
-                </button>
-
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        setShowComments(!showComments);
-                    }}
-                    className="comment-btn"
-                >
-                    💬 تعليق ({udpatedPost.comments.length})
-                </button>
-            </div>
-            <form onSubmit={handleCommentSubmit} className="comment-form">
+      {showComments && (
+        <div className="comments-list">
+          {post.comments?.length > 0 ? (
+            post.comments.map(comment => (
+              <div key={comment._id} className="comment-item">
                 <img
-                    src={user.profilePic || '/default-avatar.png'}
-                    alt="صورة الملف الشخصي"
-                    className="comment-avatar"
+                  src={comment.author?.profilePic || '/default-avatar.png'}
+                  alt={comment.author?.name}
+                  className="commenter-avatar"
                 />
-                <input
-                    type="text"
-                    value={commentText}
-                    onChange={(e) => setCommentText(e.target.value)}
-                    placeholder="اكتب تعليقاً..."
-                    className="comment-input"
-                />
-                <button type="submit" className="comment-submit-btn">
-                    نشر
-                </button>
-            </form>
-            {showComments && (
-                <div className="comments-section" onClick={e => e.stopPropagation()}>
-                    <div className="comments-list">
-                        {udpatedPost.comments.length > 0 ? (
-                            udpatedPost.comments.map(comment => (
-                                <div key={comment.id} className="comment">
-                                    <div className="comment-header">
-                                        <img
-                                            src={comment.authorImage || '/default-avatar.png'}
-                                            alt={comment.author}
-                                            className="comment-avatar"
-                                        />
-                                        <div>
-                                            <h4>{comment.author}</h4>
-                                            <p className="comment-content">{comment.content}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))
-                        ) : (
-                            <p className="no-comments">لا توجد تعليقات بعد</p>
-                        )}
-                    </div>
+                <div className="comment-content">
+                  <div className="comment-header">
+                    <span className="commenter-name">{comment.author?.name}</span>
+                    <span className="comment-date">
+                      {new Date(comment.createdAt).toLocaleDateString('ar-EG')}
+                    </span>
+                  </div>
+                  <p className="comment-text">{comment.content}</p>
                 </div>
-            )}
+              </div>
+            ))
+          ) : (
+            <p className="no-comments">لا توجد تعليقات بعد</p>
+          )}
         </div>
-    );
-}
+      )}
+    </div>
+  );
+};
 
 export default Comment;

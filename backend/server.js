@@ -3,6 +3,9 @@ import morgan from 'morgan';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
+import path from 'path';
+import { fileURLToPath } from 'url'
+
 
 // Routes
 import { authRoutes } from './routes/authRoutes.js';
@@ -15,6 +18,11 @@ dotenv.config({ path: './config/config.env' });
 
 const app = express();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Middleware
 app.use(cors());
@@ -32,7 +40,8 @@ app.use((req, res, next) => {
 // Routes
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/posts', postRoutes);
-app.use('/api/v1/comments', commentRoutes);
+// app.use('/api/v1/comments', commentRoutes);
+app.use('/api/v1/posts', commentRoutes);
 app.use('/api/v1/users', userRoutes);
 
 // Error handling

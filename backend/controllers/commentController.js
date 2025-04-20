@@ -1,38 +1,54 @@
+import Comment from '../models/Comment.js';
 import Post from '../models/Post.js';
 
-// Add comment with Arabic validation
 export const addComment = async (req, res, next) => {
   try {
     const { content } = req.body;
+    const { postId } = req.params;
 
     if (!content) {
       return res.status(400).json({
         success: false,
-        message: 'محتوى التعليق مطلوب'
+        message: 'Comment content is required'
       });
     }
 
-    const post = await Post.findByIdAndUpdate(
-      req.params.postId,
-      {
-        $push: {
-          comments: {
-            author: req.user.id,
-            authorName: req.user.name,
-            content,
-            createdAt: new Date()
-          }
-        }
-      },
-      { new: true }
-    );
+    // Create new comment
+    const comment = await Comment.create({
+      content,
+      post: postId,
+      author: req.user.id
+    });
+
+    // Populate author info
+    await comment.populate('author', 'name profilePic');
+
+    // Add comment to post's comments array
+    await Post.findByIdAndUpdate(postId, {
+      $push: { comments: comment._id }
+    });
 
     res.status(201).json({
       success: true,
-      message: 'تم إضافة التعليق',
-      data: post.comments
+      data: comment
     });
 
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getComments = async (req, res, next) => {
+  try {
+    const comments = await Comment.find({ post: req.params.postId })
+      .populate('author', 'name profilePic')
+      .sort('-createdAt');
+
+    res.status(200).json({
+      success: true,
+      count: comments.length,
+      data: comments
+    });
   } catch (err) {
     next(err);
   }

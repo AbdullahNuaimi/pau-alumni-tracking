@@ -1,12 +1,15 @@
 import './createPost.css'; 
 import { useState, useRef } from 'react';
 import { useUser } from '../../contexts/UserContext';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
-const CreatePost = ({ onPostSubmit }) => {
+const CreatePost = ({ onPostSubmit }) => { 
   const { user } = useUser();
   const [postText, setPostText] = useState('');
   const [postType, setPostType] = useState('general');
   const [imagePreview, setImagePreview] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef(null);
 
   const postTypes = [
@@ -16,29 +19,52 @@ const CreatePost = ({ onPostSubmit }) => {
     { value: 'success', label: 'قصة نجاح' }
   ];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!postText.trim() && !imagePreview) return;
+    if ((!postText.trim() && !imagePreview) || isSubmitting) return;  
+    
+    setIsSubmitting(true);
+    
+    try {
+      const formData = new FormData();
+      formData.append('content', postText);
+      formData.append('type', postType);
+      
+      if (fileInputRef.current.files[0]) {
+        formData.append('image', fileInputRef.current.files[0]);
+      }
+  
+      const response = await axios.post('/api/v1/posts', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
 
-    const newPost = {
-      id: Date.now(),
-      author: user.name,
-      authorImage: user.profilePic,
-      content: postText,
-      image: imagePreview,
-      type: postType,
-      status: 'pending', // Default status
-      date: new Date().toLocaleDateString('ar-EG'),
-      likes: [], 
-      comments: []
-    };
+      // const newPost = {
+      //   ...response.data.data,
+      //   author: user.name,
+      //   authorImage: user.profilePic,
+      //   likes: [],
+      //   comments: [],
+      //   date: new Date().toLocaleDateString('ar-EG')
+      // };
 
-    onPostSubmit(newPost);
-    setPostText('');
-    setPostType('general');
-    setImagePreview(null);
-    if (fileInputRef.current) fileInputRef.current.value = '';
+      onPostSubmit(response.data.data);
+      setPostText('');
+      setPostType('general');
+      setImagePreview(null);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      
+      toast.success(response.data.message);
+    } catch (error) {
+      console.error('Error creating post:', error);
+      toast.error(error.response?.data?.message || 'حدث خطأ أثناء نشر المنشور');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -53,9 +79,9 @@ const CreatePost = ({ onPostSubmit }) => {
     <div className="create-post">
       <form onSubmit={handleSubmit}>
         <div className="post-input">
-          <img 
-            src={user.profilePic || '/default-avatar.png'} 
-            alt="صورة الملف الشخصي" 
+          <img
+            src={user.profilePic || '/default-avatar.png'}
+            alt="صورة الملف الشخصي"
             className="author-avatar"
           />
           <textarea
@@ -68,8 +94,8 @@ const CreatePost = ({ onPostSubmit }) => {
         </div>
         <div className="post-type-selector">
           <label>نوع المنشور:</label>
-          <select 
-            value={postType} 
+          <select
+            value={postType}
             onChange={(e) => setPostType(e.target.value)}
           >
             {postTypes.map((type) => (
@@ -82,8 +108,8 @@ const CreatePost = ({ onPostSubmit }) => {
         {imagePreview && (
           <div className="image-preview">
             <img src={imagePreview} alt="معاينة الصورة" />
-            <button 
-              type="button" 
+            <button
+              type="button"
               onClick={() => setImagePreview(null)}
               className="remove-image-btn"
             >
@@ -103,8 +129,12 @@ const CreatePost = ({ onPostSubmit }) => {
             />
             <span>📷 رفع صورة</span>
           </label>
-          <button type="submit" className="post-btn">
-            نشر
+          <button
+            type="submit"
+            className="post-btn"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'جاري النشر...' : 'نشر'}
           </button>
         </div>
       </form>

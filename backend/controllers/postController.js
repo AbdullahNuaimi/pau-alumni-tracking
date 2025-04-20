@@ -1,23 +1,31 @@
 import User from '../models/User.js';
 import Comment from '../models/Comment.js';
 import Post from '../models/Post.js';
+import multer from 'multer';
 
 // Create post with Arabic content validation
 export const createPost = async (req, res, next) => {
   try {
-    const { content, type } = req.body;
-
+    // Handle both JSON and form-data
+    const content = req.body.content || req.body.get('content');
+    const type = req.body.type || req.body.get('type');
+    
     if (!content || !type) {
       return res.status(400).json({
         success: false,
         message: 'المحتوى ونوع المنشور مطلوبان'
       });
     }
+    const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
 
     const post = await Post.create({
       author: req.user.id,
       content,
       type,
+      image: {
+        path: req.file.path,
+        url: imageUrl
+      },
       status: req.user.role === 'admin' ? 'approved' : 'pending'
     });
 
@@ -39,8 +47,6 @@ export const createPost = async (req, res, next) => {
 // @access  Public (Pending posts hidden for non-admins)
 export const getAllPosts = async (req, res, next) => {
   try {
-    // For admins: show all posts
-    // For users: show only approved posts + their own pending posts
     const filter = req.user?.role === 'admin' 
       ? {} 
       : {
@@ -50,22 +56,20 @@ export const getAllPosts = async (req, res, next) => {
           ]
         };
 
-    // Filter by type if provided (e.g., /posts?type=job)
-    if (req.query.type) {
-      filter.type = req.query.type;
-    }
-
     const posts = await Post.find(filter)
       .populate('author', 'name profilePic universityId')
-      .populate('comments')
-      .sort('-createdAt');
+      .populate({
+        path: 'comments',
+        populate: { path: 'author', select: 'name profilePic' }
+      })
+      .sort('-createdAt')
+      .lean(); // Convert to plain JavaScript objects
 
     res.status(200).json({
       success: true,
       count: posts.length,
       data: posts
     });
-
   } catch (err) {
     next(err);
   }
@@ -231,6 +235,41 @@ export const approvePost = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: `تم ${status === 'approved' ? 'اعتماد' : 'رفض'} المنشور بنجاح`,
+      data: post
+    });
+
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc    Like/unlike post
+// @route   PATCH /api/v1/posts/:id/like
+// @access  Private
+export const likePost = async (req, res, next) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: 'المنشور غير موجود'
+      });
+    }
+
+    const isLiked = post.likes.includes(req.user.id);
+    
+    if (isLiked) {
+      post.likes = post.likes.filter(id => id.toString() !== req.user.id);
+    } else {
+      post.likes.push(req.user.id);
+    }
+
+    await post.save();
+
+    res.status(200).json({
+      success: true,
+      message: isLiked ? 'تم إزالة الإعجاب' : 'تم تسجيل الإعجاب',
       data: post
     });
 

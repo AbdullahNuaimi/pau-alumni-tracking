@@ -21,7 +21,10 @@ const postSchema = new mongoose.Schema({
     enum: ['pending', 'approved', 'rejected'],
     default: 'pending'
   },
-  image: String,
+  image: {
+    path: String,
+    url: String
+  },
   likes: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
@@ -29,7 +32,7 @@ const postSchema = new mongoose.Schema({
   comments: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Comment'
-  }]
+  }],
 }, { timestamps: true });
 
 postSchema.index({ content: 'text' });
