@@ -89,96 +89,27 @@ export const logout = (req, res) => {
   });
 };
 
-export const updateEducation = async (req, res) => {
-  try {
-    const { id, education } = req.body;
-    
-    if (!id || !education) {
-      return res.status(400).json({
-        success: false,
-        message: 'المعرف ومعلومات التعليم مطلوبة'
-      });
-    }
-
-    const updatedUser = await User.findByIdAndUpdate(
-      id,
-      { $set: { education: education } },
-      { new: true, runValidators: true }
-    );
-
-    if (!updatedUser) {
+export const updateEducation = (req,res)=>{
+  const {id, education} = req.body;
+  console.log("id: " , id)
+  console.log("education: " , education)
+  User.findByIdAndUpdate(id,{$set:{education:education}}).then((user)=>{
+    if(!user){
       return res.status(404).json({
         success: false,
         message: 'لم يتم العثور على المستخدم'
       });
     }
-
-    return res.status(200).json({
-      success: true,
-      message: 'تم تحديث البيانات التعليمية بنجاح',
-      data: updatedUser
-    });
-
-  } catch (err) {
+  }).catch((err)=>{
     console.error(err);
     return res.status(500).json({
       success: false,
       message: 'حدث خطأ أثناء تحديث البيانات'
     });
-  }
-};
+  });
 
-export const updateUserInfo = async (req, res) => {
-  try {
-    const { id, name, email, phone, socialMedia } = req.body;
-    
-    if (!id) {
-      return res.status(400).json({
-        success: false,
-        message: 'معرف المستخدم مطلوب'
-      });
-    }
-
-    const updateData = {
-      name,
-      email,
-      phone,
-      socialMedia
-    };
-
-    const updatedUser = await User.findByIdAndUpdate(
-      id,
-      updateData,
-      { 
-        new: true,
-        runValidators: true 
-      }
-    );
-
-    if (!updatedUser) {
-      return res.status(404).json({
-        success: false,
-        message: 'لم يتم العثور على المستخدم'
-      });
-    }
-
-    return res.status(200).json({
-      success: true,
-      message: 'تم تحديث البيانات بنجاح',
-      data: updatedUser
-    });
-
-  } catch (err) {
-    if (err.code === 11000) {
-      return res.status(400).json({
-        success: false,
-        message: 'البريد الإلكتروني مسجل مسبقاً'
-      });
-    }
-    console.error(err);
-    return res.status(500).json({
-      success: false,
-      message: 'حدث خطأ أثناء تحديث البيانات'
-    });
-  }
-};
+  return res.status(200).json({
+    success: true,
+    message: 'تم تحديث البيانات بنجاحط',
+  });
+}

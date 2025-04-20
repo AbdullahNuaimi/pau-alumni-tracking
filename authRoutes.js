@@ -4,7 +4,6 @@ import {
   login,
   logout,
   updateEducation,
-  updateUserInfo,
 } from '../controllers/authController.js';
 
 const router = express.Router();
@@ -13,7 +12,6 @@ router.post('/register', register);
 router.post('/login', login);
 router.post('/logout', logout);
 router.post('/updateEducation', updateEducation);
-router.put('/updateInfo', updateUserInfo);
 // router.post('/forgot-password', forgotPassword);
 // router.patch('/reset-password/:token', resetPassword);
 

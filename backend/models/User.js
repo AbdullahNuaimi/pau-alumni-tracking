@@ -55,7 +55,11 @@ const userSchema = new mongoose.Schema({
   posts: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Post'
-  }]
+  }],
+  socialMedia:[{
+    label: { type: String, required: true },
+    link: { type: String, required: true }
+  }],
 }, { timestamps: true });
 userSchema.index({ email: 1, universityId: 1 });
 
