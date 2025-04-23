@@ -1,7 +1,22 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from "react-router";
 import { logout } from "../../services/authService";
-import { FaHome, FaComments, FaBriefcase, FaBook, FaStar, FaUser, FaSignOutAlt, FaBars, FaTimes } from 'react-icons/fa';
+import { useUser } from '../../contexts/UserContext';
+
+
+import {
+    FaHome,
+    FaComments,
+    FaBriefcase,
+    FaBook,
+    FaStar,
+    FaUser,
+    FaSignOutAlt,
+    FaBars,
+    FaTimes,
+    FaNewspaper,
+    FaImage
+} from 'react-icons/fa';
 import "./navigationBar.css";
 import logo from "../../assets/navigation_bar_logo.png";
 
@@ -10,6 +25,8 @@ const NavigationBar = () => {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+    const { user } = useUser();
+
 
     const handleLogout = async () => {
         const result = await logout(true);
@@ -43,7 +60,6 @@ const NavigationBar = () => {
                 </button>
             )}
 
-            {/* Navigation Sidebar */}
             <div className={`sidebar ${isOpen ? 'open' : ''} ${isMobile ? 'mobile' : ''}`}>
                 <div className="logo">
                     <img src={logo} alt="شعار الجامعة" />
@@ -52,9 +68,13 @@ const NavigationBar = () => {
                 <ul>
                     <li><button onClick={() => { navigate("dashboard"); setIsOpen(false); }}><FaHome /> الرئيسية</button></li>
                     <li><button onClick={() => { navigate("community"); setIsOpen(false); }}><FaComments /> المنتدى</button></li>
+                    <li><button onClick={() => { navigate("news"); setIsOpen(false); }}><FaNewspaper /> أخبار وصور</button></li>
                     <li><button onClick={() => { navigate("community/jobs"); setIsOpen(false); }}><FaBriefcase /> وظائف شاغرة</button></li>
                     <li><button onClick={() => { navigate("GraduationBook"); setIsOpen(false); }}><FaBook /> طلب كتاب التخرج</button></li>
                     <li><button onClick={() => { navigate("community/success-stories"); setIsOpen(false); }}><FaStar /> قصص نجاح</button></li>
+                    {user?.role === 'admin' && (
+                        <li><button onClick={() => { navigate("admin/articles"); setIsOpen(false); }}><FaImage /> إدارة المقالات</button></li>
+                    )}
                     <li><button onClick={() => { navigate("ProfilePage"); setIsOpen(false); }}><FaUser /> إعدادات المستخدم</button></li>
                     <li><button onClick={handleLogout}><FaSignOutAlt /> تسجيل الخروج</button></li>
                 </ul>

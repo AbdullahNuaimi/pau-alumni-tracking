@@ -8,6 +8,10 @@ import PostDetail from './pages/ViewPost/viewPost.page';
 import GraduationBook from './pages/GraduationBook/graduationBook.page';
 import ProfilePage from './pages/ProfilePage/profilePage.page';
 import ViewProfile from './pages/ViewProfile/viewProfile.page';
+import NewsAndPhotos from './pages/NewsAndPhotos/NewsAndPhotos.page';
+import ArticleDetail from './pages/ArticleDetail/ArticleDetail.page';
+import AdminArticleEditor from './pages/AdminArticleEditor/AdminArticleEditor.page';
+
 
 import NavigationBar from './components/NavigationBar/navigationBar.component';
 
@@ -15,9 +19,9 @@ import { UserProvider } from './contexts/UserContext';
 import { ToastContainer, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-// Create a separate component for the route logic
+
 const AppRoutes = () => {
-  const location = useLocation(); // Properly get location
+  const location = useLocation(); 
   
   return (
     <>
@@ -35,6 +39,10 @@ const AppRoutes = () => {
           <Route path="/posts/:postId/full" element={<PostDetail />} />
           <Route path="/community/jobs" element={<Community jobs />} />
           <Route path="/community/success-stories" element={<Community successStories />} />
+          <Route path="/news" element={<NewsAndPhotos />} />
+        <Route path="/articles/:slug" element={<ArticleDetail />} />
+        <Route path="/admin/articles/new" element={<AdminArticleEditor />} />
+        <Route path="/admin/articles/edit/:id" element={<AdminArticleEditor />} />
         </Routes>
       </main>
     </>
