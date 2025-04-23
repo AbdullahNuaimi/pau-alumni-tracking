@@ -62,7 +62,7 @@ const Community = () => {
                     userId,
                     page: pageNum,
                     limit: 4,
-                    _: Date.now() // Cache buster
+                    _: Date.now()
                 }
             });
 
@@ -70,7 +70,6 @@ const Community = () => {
             setHasMore(newPosts.length === 4);
             
             setAllPosts(prev => {
-                // Filter out duplicates
                 const existingIds = new Set(prev.map(p => p._id));
                 const uniqueNewPosts = newPosts.filter(post => !existingIds.has(post._id));
                 
@@ -78,7 +77,6 @@ const Community = () => {
                     ? newPosts.map(formatPost)
                     : [...prev, ...uniqueNewPosts.map(formatPost)];
                 
-                // Apply filter to updated posts
                 const filtered = applyFilter(updatedPosts);
                 setFilteredPosts(filtered);
                 
@@ -115,7 +113,7 @@ const Community = () => {
     useEffect(() => {
         if (!postsListRef.current || !hasMore) return;
     
-        const currentRef = postsListRef.current; // Capture current value
+        const currentRef = postsListRef.current;
         const observer = new IntersectionObserver(
             (entries) => {
                 if (entries[0].isIntersecting && hasMore && !isFetchingRef.current) {

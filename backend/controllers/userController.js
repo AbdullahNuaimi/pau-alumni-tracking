@@ -21,6 +21,34 @@ export const getProfile = async (req, res, next) => {
   }
 };
 
+export const getUserProfile = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id)
+      .select('-password -__v -posts');
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'المستخدم غير موجود'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: {
+        user: {
+          ...user.toObject(),
+          joinDate: user.createdAt.toLocaleDateString('ar-EG')
+        }
+      }
+    });
+
+  } catch (err) {
+    next(err);
+  }
+};
+
+
 // Update profile with validation
 export const updateProfile = async (req, res, next) => {
   try {

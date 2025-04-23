@@ -3,11 +3,12 @@ import { useState } from 'react';
 import Comment from "../Comment/comment.component";
 import { FaHeart, FaRegHeart, FaTimes } from 'react-icons/fa';
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import './postCard.css';
 
 const PostCard = ({ post, onApprove, onReject, onLike }) => {
   const { user } = useUser();
-
+  const navigate = useNavigate();
 
   const [updatedPost, setUpdatedPost] = useState(null);
   const [isLiking, setIsLiking] = useState(false);
@@ -99,7 +100,10 @@ const PostCard = ({ post, onApprove, onReject, onLike }) => {
     }
   };
 
-
+  const handleViewUser = (e) => {
+    e.stopPropagation(); 
+    navigate(`/ViewProfile/${user._id}`); 
+  };
   return (
     <div className={`post-card ${postStatus} ${postType}`}
       style={{
@@ -144,6 +148,7 @@ const PostCard = ({ post, onApprove, onReject, onLike }) => {
           src={postAuthorImage}
           alt={postAuthor}
           className="post-author-avatar"
+          onClick={handleViewUser}
         />
         <div className="post-author-info">
           <h4>{postAuthor}</h4>

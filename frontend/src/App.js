@@ -30,7 +30,7 @@ const AppRoutes = () => {
           <Route path="/" element={<Login />} />
           <Route path="/GraduationBook" element={<GraduationBook />} />
           <Route path="/ProfilePage" element={<ProfilePage />} />
-          <Route path="/ViewProfile/:id" element={<ViewProfile />} />
+          <Route path="/ViewProfile/:userId" element={<ViewProfile />} />
           <Route path="/community" element={<Community />} />
           <Route path="/community/:postId" element={<ViewPost />} />
           <Route path="/community/jobs" element={<Community jobs />} />

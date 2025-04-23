@@ -42,7 +42,6 @@
   margin-top: 3px;
 }
 
-/* Post Content */
 .post-content {
   margin: 15px 0;
 }
@@ -55,7 +54,6 @@
 }
 
 .post-image {
-  /* max-width: 250px; */
   max-height: 250px;
   aspect-ratio: 3/4;
   width: auto;
@@ -250,4 +248,8 @@
 
 .like-button span {
   font-size: 14px;
+}
+
+.post-author-avatar {
+  cursor: pointer;
 }
