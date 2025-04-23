@@ -30,7 +30,7 @@ const CreatePost = ({ onPostSubmit }) => {
       const response = await axios.post('/api/v1/posts', {
         content: postText,
         type: postType,
-        image: imagePreview // Send the Base64 string directly
+        image: imagePreview 
       }, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
