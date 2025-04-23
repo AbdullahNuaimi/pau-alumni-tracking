@@ -24,16 +24,20 @@ export const createPost = async (req, res, next) => {
       author: req.user.id,
       content,
       type,
-      image, // Store the Base64 string directly
+      image, 
       status: req.user.role === 'admin' ? 'approved' : 'pending'
-    });
+    })
+
+    const populatedPost = await Post.findById(post._id)
+    .populate('author', 'name profilePic universityId')
+    .lean();
 
     res.status(201).json({
       success: true,
       message: req.user.role === 'admin' 
         ? 'تم نشر المنشور بنجاح' 
         : 'تم إرسال المنشور للمراجعة',
-      data: post
+      data: populatedPost,
     });
 
   } catch (err) {
@@ -46,6 +50,10 @@ export const createPost = async (req, res, next) => {
 // @access  Public (Pending posts hidden for non-admins)
 export const getAllPosts = async (req, res, next) => {
   try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
     const filter = req.headers.role === 'admin' 
       ? {} 
       : {
@@ -62,7 +70,9 @@ export const getAllPosts = async (req, res, next) => {
         populate: { path: 'author', select: 'name profilePic' }
       })
       .sort('-createdAt')
-      .lean(); 
+      .skip(skip)
+      .limit(limit)
+      .lean();
 
     res.status(200).json({
       success: true,
@@ -73,7 +83,6 @@ export const getAllPosts = async (req, res, next) => {
     next(err);
   }
 };
-
 // @desc    Get single post
 // @route   GET /api/v1/posts/:id
 // @access  Public (Pending posts visible only to author/admin)
