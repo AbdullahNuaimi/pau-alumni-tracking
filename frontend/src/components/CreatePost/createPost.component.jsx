@@ -38,15 +38,6 @@ const CreatePost = ({ onPostSubmit }) => {
         }
       });
 
-      // const newPost = {
-      //   ...response.data.data,
-      //   author: user.name,
-      //   authorImage: user.profilePic,
-      //   likes: [],
-      //   comments: [],
-      //   date: new Date().toLocaleDateString('ar-EG')
-      // };
-
       onPostSubmit(response.data.data);
       setPostText('');
       setPostType('general');

@@ -100,7 +100,7 @@ const Community = () => {
 
     const handleApprove = async (postId) => {
         try {
-            await axios.patch(`/api/v1/posts/${postId}/approve`, { status: 'approved' }, {
+            await axios.patch(`/api/v1/posts/${postId}/approve`, { status: 'approved' , user: {role: user.role}}, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
@@ -145,7 +145,7 @@ const Community = () => {
             });
         } catch (error) {
             console.error('Error liking post:', error);
-            throw error; // This will be caught in PostCard's handleLike
+            throw error;
         }
     };
     return (

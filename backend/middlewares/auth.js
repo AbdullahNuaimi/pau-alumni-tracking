@@ -2,10 +2,10 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import AppError from '../utils/appError.js';
 
-// Protect routes - JWT verification
+
 export const protect = async (req, res, next) => {
   try {
-    // 1) Get token from headers
+
     let token;
     if (
       req.headers.authorization &&
@@ -20,14 +20,14 @@ export const protect = async (req, res, next) => {
       );
     }
 
-    // 2) Verify token
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // 3) Check if user still exists
+
     const currentUser = await User.findById(decoded.id);
     if (!currentUser) {
       return next(
-        new AppError('المستخدم المرتبط بهذا الرمز لم يعد موجوداً', 401)
+        new AppError('user token was not found', 401)
       );
     }
 
@@ -40,7 +40,7 @@ export const protect = async (req, res, next) => {
 };
 
 // Restrict to specific roles (Admin)
-export const restrictTo = (...roles) => {
+export const restrictTo = (roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
       return next(

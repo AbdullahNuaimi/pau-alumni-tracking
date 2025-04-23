@@ -22,7 +22,7 @@ router.route('/:id')
   .patch(protect, updatePost)
   .delete(protect, deletePost);
 
-router.patch('/:id/approve', protect, restrictTo, approvePost);
+router.patch('/:id/approve', protect, restrictTo(["admin"]),approvePost);
 router.patch('/:id/like', protect, likePost);
 
 export { router as postRoutes };
