@@ -7,7 +7,10 @@ import Register from './pages/Register/register.page';
 import ViewPost from './pages/ViewPost/viewPost.page';
 import GraduationBook from './pages/GraduationBook/graduationBook.page';
 import ProfilePage from './pages/ProfilePage/profilePage.page';
+import ViewProfile from './pages/ViewProfile/viewProfile.page';
+
 import NavigationBar from './components/NavigationBar/navigationBar.component';
+
 import { UserProvider } from './contexts/UserContext';
 import { ToastContainer, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -27,6 +30,7 @@ const AppRoutes = () => {
           <Route path="/" element={<Login />} />
           <Route path="/GraduationBook" element={<GraduationBook />} />
           <Route path="/ProfilePage" element={<ProfilePage />} />
+          <Route path="/ViewProfile/:id" element={<ViewProfile />} />
           <Route path="/community" element={<Community />} />
           <Route path="/community/:postId" element={<ViewPost />} />
           <Route path="/community/jobs" element={<Community jobs />} />
