@@ -26,18 +26,15 @@ const CreatePost = ({ onPostSubmit }) => {
     setIsSubmitting(true);
     
     try {
-      const formData = new FormData();
-      formData.append('content', postText);
-      formData.append('type', postType);
-      
-      if (fileInputRef.current.files[0]) {
-        formData.append('image', fileInputRef.current.files[0]);
-      }
-  
-      const response = await axios.post('/api/v1/posts', formData, {
+
+      const response = await axios.post('/api/v1/posts', {
+        content: postText,
+        type: postType,
+        image: imagePreview // Send the Base64 string directly
+      }, {
         headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
         }
       });
 

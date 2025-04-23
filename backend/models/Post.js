@@ -21,10 +21,7 @@ const postSchema = new mongoose.Schema({
     enum: ['pending', 'approved', 'rejected'],
     default: 'pending'
   },
-  image: {
-    path: String,
-    url: String
-  },
+  image: String,
   likes: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'

@@ -16,12 +16,15 @@ const Community = () => {
 
     useEffect(() => {
         const fetchPosts = async () => {
+            const userId = await JSON.parse(localStorage.getItem('user'))._id;
             setIsLoading(true);
             try {
                 const response = await axios.get('/api/v1/posts', {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`
-                    }
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        role: JSON.parse(localStorage.getItem('user')).role,
+                    },
+                    params: { userId }
                 });
 
                 const formattedPosts = response.data.data.map(post => ({
@@ -33,7 +36,7 @@ const Community = () => {
                     comments: post.comments || [],
                     likes: post.likes || []
                 }));
-
+                console.log("fetched posts: ", response.data.data);
                 setPosts(formattedPosts);
             } catch (error) {
                 console.error('Error fetching posts:', error);

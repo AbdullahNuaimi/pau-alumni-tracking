@@ -1,31 +1,30 @@
-import User from '../models/User.js';
 import Comment from '../models/Comment.js';
 import Post from '../models/Post.js';
-import multer from 'multer';
 
-// Create post with Arabic content validation
 export const createPost = async (req, res, next) => {
   try {
-    // Handle both JSON and form-data
-    const content = req.body.content || req.body.get('content');
-    const type = req.body.type || req.body.get('type');
-    
+    const { content, type, image } = req.body;
+
     if (!content || !type) {
       return res.status(400).json({
         success: false,
         message: 'المحتوى ونوع المنشور مطلوبان'
       });
     }
-    const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+
+    // Validate image if provided
+    if (image && !image.startsWith('data:image')) {
+      return res.status(400).json({
+        success: false,
+        message: 'صيغة الصورة غير صالحة'
+      });
+    }
 
     const post = await Post.create({
       author: req.user.id,
       content,
       type,
-      image: {
-        path: req.file.path,
-        url: imageUrl
-      },
+      image, // Store the Base64 string directly
       status: req.user.role === 'admin' ? 'approved' : 'pending'
     });
 
@@ -47,12 +46,13 @@ export const createPost = async (req, res, next) => {
 // @access  Public (Pending posts hidden for non-admins)
 export const getAllPosts = async (req, res, next) => {
   try {
-    const filter = req.user?.role === 'admin' 
+    console.log("user ID from frontend:", req.query.userId);
+    const filter = req.headers.role === 'admin' 
       ? {} 
       : {
           $or: [
             { status: 'approved' },
-            { author: req.user?.id, status: 'pending' }
+            { author: req.query.userId, status: 'pending' }
           ]
         };
 
@@ -63,7 +63,7 @@ export const getAllPosts = async (req, res, next) => {
         populate: { path: 'author', select: 'name profilePic' }
       })
       .sort('-createdAt')
-      .lean(); // Convert to plain JavaScript objects
+      .lean(); 
 
     res.status(200).json({
       success: true,

@@ -5,7 +5,6 @@ import './postCard.css';
 
 const PostCard = ({ post, onApprove, onReject }) => {
   const { user } = useUser();
-  console.log('Post data:', post);
 
 
   const [updatedPost, setUpdatedPost] = useState(null);
@@ -46,7 +45,7 @@ const PostCard = ({ post, onApprove, onReject }) => {
     rejected: 'red'
   };
 
-  const isAdmin = user?.role === 'admin';
+  // const isAdmin = user?.role === 'admin';
   const isPending = postStatus === 'pending';
   const handleCommentAdded = (newComment) => {
     setUpdatedPost(prev => ({
@@ -66,7 +65,7 @@ const PostCard = ({ post, onApprove, onReject }) => {
           ⏳ قيد المراجعة (فقط أنت والمسؤولون يمكنهم رؤية هذا)
         </div>
       )}
-      {(isAdmin && isPending) && (
+      {(user.role === "admin" && isPending) && (
         <div className="admin-actions">
           <h4>إجراءات المسؤول:</h4>
           <button
@@ -109,19 +108,15 @@ const PostCard = ({ post, onApprove, onReject }) => {
       <div className="post-content">
         <p>{post.content}</p>
         {post.image && (
-          <>
           <img
-          src={`http://localhost:5000/${post.image.replace(/\\/g, '/')}`}
-          alt="صورة المنشور"
-          className="post-image"
-          onError={(e) => {
-            e.target.style.display = 'none';
-          }}
-          
+            src={post.image} 
+            alt="صورة المنشور"
+            className="post-image"
+            onError={(e) => {
+              e.target.style.display = 'none';
+            }}
           />
-          image url = {`http://localhost:5000/${post.image.replace(/\\/g, '/')}`}
-          </>
-          
+
         )
         }
       </div>
