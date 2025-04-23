@@ -9,11 +9,12 @@ const commentSchema = new mongoose.Schema({
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
+    required: true
   },
   content: {
     type: String,
     required: true,
+    trim: true
   },
   edited: {
     type: Boolean,

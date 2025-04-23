@@ -4,7 +4,7 @@ import Community from './pages/Community/community.page';
 import Dashboard from './pages/Dashboard/dashboard.page';
 import Login from './pages/Login/login.page';
 import Register from './pages/Register/register.page';
-import ViewPost from './pages/ViewPost/viewPost.page';
+import PostDetail from './pages/ViewPost/viewPost.page';
 import GraduationBook from './pages/GraduationBook/graduationBook.page';
 import ProfilePage from './pages/ProfilePage/profilePage.page';
 import ViewProfile from './pages/ViewProfile/viewProfile.page';
@@ -32,7 +32,7 @@ const AppRoutes = () => {
           <Route path="/ProfilePage" element={<ProfilePage />} />
           <Route path="/ViewProfile/:userId" element={<ViewProfile />} />
           <Route path="/community" element={<Community />} />
-          <Route path="/community/:postId" element={<ViewPost />} />
+          <Route path="/posts/:postId/full" element={<PostDetail />} />
           <Route path="/community/jobs" element={<Community jobs />} />
           <Route path="/community/success-stories" element={<Community successStories />} />
         </Routes>

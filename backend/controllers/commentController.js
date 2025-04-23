@@ -4,37 +4,40 @@ import Post from '../models/Post.js';
 export const addComment = async (req, res, next) => {
   try {
     const { content } = req.body;
-    const { postId } = req.params;
+    const postId = req.params.id;
 
     if (!content) {
       return res.status(400).json({
         success: false,
-        message: 'Comment content is required'
+        message: 'محتوى التعليق مطلوب'
       });
     }
 
-    // Create new comment
     const comment = await Comment.create({
       content,
-      post: postId,
-      author: req.user.id
+      author: req.user.id,
+      post: postId
     });
 
-    // Populate author info
-    await comment.populate('author', 'name profilePic');
+    // Populate author info before returning
+    const populatedComment = await Comment.findById(comment._id)
+      .populate('author', 'name profilePic');
 
-    // Add comment to post's comments array
-    await Post.findByIdAndUpdate(postId, {
-      $push: { comments: comment._id }
-    });
+    // Update the post's comments array
+    await Post.findByIdAndUpdate(
+      postId,
+      { $push: { comments: comment._id } },
+      { new: true }
+    );
 
     res.status(201).json({
       success: true,
-      data: comment
+      message: 'تم إضافة التعليق بنجاح',
+      data: populatedComment
     });
 
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 };
 

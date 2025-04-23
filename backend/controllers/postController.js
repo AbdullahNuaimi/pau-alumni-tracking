@@ -285,3 +285,44 @@ export const likePost = async (req, res, next) => {
     next(err);
   }
 };
+
+// @desc    Get full post with comments
+// @route   GET /api/v1/posts/:id/full
+// @access  Private
+export const getFullPost = async (req, res, next) => {
+  try {
+    const post = await Post.findById(req.params.id)
+      .populate('author', 'name profilePic universityId')
+      .populate({
+        path: 'comments',
+        populate: { 
+          path: 'author', 
+          select: 'name profilePic',
+          options: { sort: { createdAt: -1 } } 
+        }
+      });
+
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: 'المنشور غير موجود'
+      });
+    }
+
+    if (post.status !== 'approved' && 
+        (post.author._id.toString() !== req.user.id && req.user.role !== 'admin')) {
+      return res.status(403).json({
+        success: false,
+        message: 'غير مصرح لك بمشاهدة هذا المنشور'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: post
+    });
+
+  } catch (err) {
+    next(err);
+  }
+};

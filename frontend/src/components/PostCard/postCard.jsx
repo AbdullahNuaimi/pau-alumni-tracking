@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import './postCard.css';
 
-const PostCard = ({ post, onApprove, onReject, onLike }) => {
+const PostCard = ({ post, onApprove, onReject, onLike, isDetailView = false }) => {
   const { user } = useUser();
   const navigate = useNavigate();
 
@@ -64,7 +64,7 @@ const PostCard = ({ post, onApprove, onReject, onLike }) => {
   const handleCommentAdded = (newComment) => {
     setUpdatedPost(prev => ({
       ...prev,
-      comments: [...prev.comments, newComment]
+      comments: prev.comments ? [...prev.comments, newComment] : [newComment]
     }));
   };
 
@@ -101,15 +101,32 @@ const PostCard = ({ post, onApprove, onReject, onLike }) => {
   };
 
   const handleViewUser = (e) => {
-    e.stopPropagation(); 
-    navigate(`/ViewProfile/${user._id}`); 
+    e.stopPropagation();
+    navigate(`/ViewProfile/${user._id}`);
   };
+
+  const handlePostClick = (e) => {
+
+    if (
+      e.target.closest('.comment-input') ||
+      e.target.closest('.like-button') ||
+      e.target.closest('.admin-actions')
+    ) {
+      return;
+    }
+    navigate(`/posts/${post._id}/full`);
+  };
+
+
   return (
     <div className={`post-card ${postStatus} ${postType}`}
       style={{
         borderLeft: `4px solid ${statusColors[postStatus]}`,
-        opacity: postStatus === 'rejected' ? 0.7 : 1
-      }}>
+        opacity: postStatus === 'rejected' ? 0.7 : 1,
+        cursor: isDetailView ? 'default' : 'pointer'
+      }}
+      onClick={!isDetailView ? handlePostClick : undefined}
+    >
       {showPendingStatus && (
         <div className="pending-badge">
           ⏳ قيد المراجعة (فقط أنت والمسؤولون يمكنهم رؤية هذا)
@@ -205,6 +222,7 @@ const PostCard = ({ post, onApprove, onReject, onLike }) => {
         <Comment
           post={updatedPost}
           user={user}
+          className="comment-input"
           onCommentAdded={handleCommentAdded}
         />
       )}

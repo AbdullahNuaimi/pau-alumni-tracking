@@ -6,7 +6,8 @@ import {
   updatePost,
   deletePost,
   approvePost,
-  likePost
+  likePost,
+  getFullPost
 } from '../controllers/postController.js';
 import { protect, restrictTo } from '../middlewares/auth.js';
 
@@ -24,5 +25,6 @@ router.route('/:id')
 
 router.patch('/:id/approve', protect, restrictTo(["admin"]),approvePost);
 router.patch('/:id/like', protect, likePost);
+router.get('/:id/full', protect, getFullPost);
 
 export { router as postRoutes };
