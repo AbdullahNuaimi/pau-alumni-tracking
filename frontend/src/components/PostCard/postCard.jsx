@@ -1,13 +1,16 @@
 import { useUser } from "../../contexts/UserContext";
 import { useState } from 'react';
 import Comment from "../Comment/comment.component";
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import { toast } from "react-toastify";
 import './postCard.css';
 
-const PostCard = ({ post, onApprove, onReject }) => {
+const PostCard = ({ post, onApprove, onReject, onLike }) => {
   const { user } = useUser();
 
 
   const [updatedPost, setUpdatedPost] = useState(null);
+  const [isLiking, setIsLiking] = useState(false);
 
   if (!post) return null;
 
@@ -53,6 +56,40 @@ const PostCard = ({ post, onApprove, onReject }) => {
       comments: [...prev.comments, newComment]
     }));
   };
+
+
+  const isLiked = updatedPost?.likes?.includes(user?.id);
+  const likeCount = updatedPost?.likes?.length || 0;
+
+  const handleLike = async () => {
+    if (!user) {
+      toast.error('يجب تسجيل الدخول للإعجاب بالمنشور');
+      return;
+    }
+
+    try {
+      setIsLiking(true);
+      await onLike(post._id || post.id);
+
+      // Optimistically update the UI
+      setUpdatedPost(prev => {
+        const newLikes = isLiked
+          ? prev.likes.filter(id => id !== user.id)
+          : [...prev.likes, user.id];
+
+        return {
+          ...prev,
+          likes: newLikes
+        };
+      });
+    } catch (error) {
+      console.error('Error liking post:', error);
+      toast.error('حدث خطأ أثناء تسجيل الإعجاب');
+    } finally {
+      setIsLiking(false);
+    }
+  };
+
 
   return (
     <div className={`post-card ${postStatus} ${postType}`}
@@ -109,7 +146,7 @@ const PostCard = ({ post, onApprove, onReject }) => {
         <p>{post.content}</p>
         {post.image && (
           <img
-            src={post.image} 
+            src={post.image}
             alt="صورة المنشور"
             className="post-image"
             onError={(e) => {
@@ -119,6 +156,20 @@ const PostCard = ({ post, onApprove, onReject }) => {
 
         )
         }
+      </div>
+      <div className="post-footer">
+        <button 
+          onClick={handleLike}
+          disabled={isLiking}
+          className="like-button"
+        >
+          {isLiked ? (
+            <FaHeart color="red" />
+          ) : (
+            <FaRegHeart />
+          )}
+          <span>{likeCount}</span>
+        </button>
       </div>
       {updatedPost && (
         <Comment

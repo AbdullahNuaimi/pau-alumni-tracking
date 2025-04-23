@@ -136,6 +136,18 @@ const Community = () => {
         return <div className="loading">جاري التحميل...</div>;
     }
 
+    const handleLike = async (postId) => {
+        try {
+            await axios.patch(`/api/v1/posts/${postId}/like`, {}, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+        } catch (error) {
+            console.error('Error liking post:', error);
+            throw error; // This will be caught in PostCard's handleLike
+        }
+    };
     return (
         <div className="community-page">
             <h1>المجتمع الأكاديمي</h1>
@@ -160,6 +172,7 @@ const Community = () => {
                             post={post}
                             onApprove={handleApprove}
                             onReject={handleReject}
+                            onLike={handleLike}
                             onCommentAdded={(newComment) => {
                                 setPosts(prev => prev.map(p =>
                                     p._id === post._id
