@@ -55,14 +55,67 @@
 }
 
 .post-image {
-  max-width: 100%;
-  max-height: 500px;
+  /* max-width: 250px; */
+  max-height: 250px;
+  aspect-ratio: 3/4;
+  width: auto;
+  height: auto;
   border-radius: 8px;
   margin-top: 15px;
-  display: block;
+  cursor: pointer;
+  transition: transform 0.2s;
+  object-fit: cover;
 }
 
-/* Post Meta */
+.post-image:hover {
+  transform: scale(1.02);
+}
+
+.image-fullscreen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+.image-fullscreen-container {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  cursor: default;
+}
+
+.fullscreen-image {
+  max-width: 100%;
+  max-height: 80vh;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.close-fullscreen-btn {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.close-fullscreen-btn:hover {
+  color: #ccc;
+}
+
+
 .post-meta {
   display: flex;
   gap: 10px;
@@ -84,7 +137,7 @@
   color: white;
 }
 
-/* Status Badges */
+
 .pending-badge {
   background: #FFF3E0;
   color: #E65100;
@@ -95,7 +148,7 @@
   display: inline-block;
 }
 
-/* Admin Actions */
+
 .admin-actions {
   background: #F5F5F5;
   padding: 12px;
@@ -128,7 +181,7 @@
   border: 1px solid #FFCDD2;
 }
 
-/* Type Specific Styles */
+
 .post-card.general {
   border-right: 4px solid #3b82f6;
 }

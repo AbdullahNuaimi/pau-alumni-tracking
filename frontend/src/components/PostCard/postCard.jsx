@@ -1,7 +1,7 @@
 import { useUser } from "../../contexts/UserContext";
 import { useState } from 'react';
 import Comment from "../Comment/comment.component";
-import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import { FaHeart, FaRegHeart, FaTimes } from 'react-icons/fa';
 import { toast } from "react-toastify";
 import './postCard.css';
 
@@ -11,6 +11,16 @@ const PostCard = ({ post, onApprove, onReject, onLike }) => {
 
   const [updatedPost, setUpdatedPost] = useState(null);
   const [isLiking, setIsLiking] = useState(false);
+  const [isImageFullscreen, setIsImageFullscreen] = useState(false);
+
+  const handleImageClick = () => {
+    setIsImageFullscreen(true);
+  };
+
+  const closeFullscreen = () => {
+    setIsImageFullscreen(false);
+  };
+
 
   if (!post) return null;
 
@@ -71,7 +81,6 @@ const PostCard = ({ post, onApprove, onReject, onLike }) => {
       setIsLiking(true);
       await onLike(post._id || post.id);
 
-      // Optimistically update the UI
       setUpdatedPost(prev => {
         const newLikes = isLiked
           ? prev.likes.filter(id => id !== user.id)
@@ -145,20 +154,36 @@ const PostCard = ({ post, onApprove, onReject, onLike }) => {
       <div className="post-content">
         <p>{post.content}</p>
         {post.image && (
-          <img
-            src={post.image}
-            alt="صورة المنشور"
-            className="post-image"
-            onError={(e) => {
-              e.target.style.display = 'none';
-            }}
-          />
+          <>
+            <img
+              src={post.image}
+              alt="صورة المنشور"
+              className="post-image"
+              onClick={handleImageClick}
+              onError={(e) => {
+                e.target.style.display = 'none';
+              }}
+            />
 
-        )
-        }
+            {isImageFullscreen && (
+              <div className="image-fullscreen-overlay" onClick={closeFullscreen}>
+                <div className="image-fullscreen-container" onClick={(e) => e.stopPropagation()}>
+                  <button className="close-fullscreen-btn" onClick={closeFullscreen}>
+                    <FaTimes />
+                  </button>
+                  <img
+                    src={post.image}
+                    alt="صورة المنشور مكبرة"
+                    className="fullscreen-image"
+                  />
+                </div>
+              </div>
+            )}
+          </>
+        )}
       </div>
       <div className="post-footer">
-        <button 
+        <button
           onClick={handleLike}
           disabled={isLiking}
           className="like-button"
