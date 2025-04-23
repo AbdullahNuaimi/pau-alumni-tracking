@@ -36,7 +36,6 @@ const Community = () => {
                     comments: post.comments || [],
                     likes: post.likes || []
                 }));
-                console.log("fetched posts: ", response.data.data);
                 setPosts(formattedPosts);
             } catch (error) {
                 console.error('Error fetching posts:', error);

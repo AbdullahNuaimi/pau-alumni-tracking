@@ -46,7 +46,6 @@ export const createPost = async (req, res, next) => {
 // @access  Public (Pending posts hidden for non-admins)
 export const getAllPosts = async (req, res, next) => {
   try {
-    console.log("user ID from frontend:", req.query.userId);
     const filter = req.headers.role === 'admin' 
       ? {} 
       : {
