@@ -1,4 +1,4 @@
-/* Post Card Container */
+
 .post-card {
   background: white;
   padding: 20px;
@@ -6,11 +6,11 @@
   margin-bottom: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   position: relative;
-  text-align: right; /* RTL support */
-  direction: rtl; /* Right-to-left for Arabic */
+  text-align: right; 
+  direction: rtl; 
 }
 
-/* Post Header */
+
 .post-header {
   display: flex;
   align-items: center;
