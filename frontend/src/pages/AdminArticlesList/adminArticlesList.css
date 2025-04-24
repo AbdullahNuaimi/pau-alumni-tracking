@@ -134,3 +134,7 @@
       gap: 1rem;
     }
   }
+
+  .articles-table td{
+    cursor: pointer;
+  }

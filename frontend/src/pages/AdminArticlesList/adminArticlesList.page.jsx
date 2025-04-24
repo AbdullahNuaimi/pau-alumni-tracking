@@ -2,12 +2,15 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 import './adminArticlesList.css';
 
 const AdminArticlesList = () => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchArticles = async () => {
@@ -29,7 +32,8 @@ const AdminArticlesList = () => {
     fetchArticles();
   }, []);
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (e,id) => {
+    e.stopPropagation();
     if (!window.confirm('هل أنت متأكد من حذف هذا المقال؟')) return;
     
     try {
@@ -90,8 +94,8 @@ const AdminArticlesList = () => {
           </thead>
           <tbody>
             {articles.map(article => (
-              <tr key={article._id}>
-                <td>{article.title}</td>
+              <tr key={article._id} >
+                <td onClick={()=>{navigate(`/articles/${article._id}`)}}>{article.title}</td>
                 <td>
                   {article.categories.map(cat => getCategoryName(cat)).join('، ')}
                 </td>
@@ -113,7 +117,7 @@ const AdminArticlesList = () => {
                     تعديل
                   </Link>
                   <button
-                    onClick={() => handleDelete(article._id)}
+                    onClick={(e) => handleDelete(e,article._id)}
                     className="btn-delete"
                     disabled={deletingId === article._id}
                   >
