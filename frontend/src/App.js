@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'; // Add useLocation
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Community from './pages/Community/community.page';
 import Dashboard from './pages/Dashboard/dashboard.page';
 import Login from './pages/Login/login.page';
@@ -14,14 +14,11 @@ import AdminArticleEditor from './pages/AdminArticleEditor/AdminArticleEditor.pa
 import AdminArticlesList from './pages/AdminArticlesList/adminArticlesList.page';
 import CertificateGenerator from './components/CertificateGenerator/CertificateGenerator.component';
 import Guard from './components/Guard/Guard.component';
-
-
+import MainPage from './pages/Main/main.page'; 
 import NavigationBar from './components/NavigationBar/navigationBar.component';
-
 import { UserProvider } from './contexts/UserContext';
 import { ToastContainer, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 
 const AppRoutes = () => {
   const location = useLocation(); 
@@ -33,7 +30,8 @@ const AppRoutes = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/main" element={<MainPage />} />
+          <Route path="/dashboard" element={<Guard allowedRoles={['admin']}><Dashboard /></Guard>} />
           <Route path="/" element={<Login />} />
           <Route path="/GraduationBook" element={<GraduationBook />} />
           <Route path="/ProfilePage" element={<ProfilePage />} />
@@ -43,11 +41,11 @@ const AppRoutes = () => {
           <Route path="/community/jobs" element={<Community jobs />} />
           <Route path="/community/success-stories" element={<Community successStories />} />
           <Route path="/news" element={<NewsAndPhotos />} />
-        <Route path="/articles/:id" element={<Guard allowedRoles={['admin','user']}><ArticleDetail /></Guard>} />
-        <Route path="/admin/articles/new" element={<Guard allowedRoles={['admin']}><AdminArticleEditor /></Guard>} />
-        <Route path="/admin/articles/edit/:id" element={<Guard allowedRoles={['admin']}><AdminArticleEditor /></Guard>} />
-        <Route path="/admin/articles" element={<Guard allowedRoles={['admin']}><AdminArticlesList /></Guard>} />
-        <Route path="/admin/certificate" element={<Guard allowedRoles={['admin']}><CertificateGenerator /></Guard>} />
+          <Route path="/articles/:id" element={<Guard allowedRoles={['admin','user']}><ArticleDetail /></Guard>} />
+          <Route path="/admin/articles/new" element={<Guard allowedRoles={['admin']}><AdminArticleEditor /></Guard>} />
+          <Route path="/admin/articles/edit/:id" element={<Guard allowedRoles={['admin']}><AdminArticleEditor /></Guard>} />
+          <Route path="/admin/articles" element={<Guard allowedRoles={['admin']}><AdminArticlesList /></Guard>} />
+          <Route path="/admin/certificate" element={<Guard allowedRoles={['admin']}><CertificateGenerator /></Guard>} />
         </Routes>
       </main>
     </>
@@ -72,7 +70,7 @@ function App() {
           transition={Bounce}
         />
         <BrowserRouter>
-          <AppRoutes /> {/* Use the new component */}
+          <AppRoutes /> 
         </BrowserRouter>
       </UserProvider>
     </div>

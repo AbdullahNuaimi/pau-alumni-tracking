@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from "react-router";
 import { logout } from "../../services/authService";
 import { useUser } from '../../contexts/UserContext';
 
-
 import {
     FaHome,
     FaComments,
@@ -16,7 +15,8 @@ import {
     FaTimes,
     FaNewspaper,
     FaImage,
-    FaCertificate
+    FaCertificate,
+    FaTachometerAlt
 } from 'react-icons/fa';
 import "./navigationBar.css";
 import logo from "../../assets/navigation_bar_logo.png";
@@ -27,7 +27,6 @@ const NavigationBar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
     const { user } = useUser();
-
 
     const handleLogout = async () => {
         const result = await logout(true);
@@ -66,19 +65,22 @@ const NavigationBar = () => {
                     <h2>موقع الخريجين</h2>
                 </div>
                 <ul>
-                    <li><button onClick={() => { navigate("dashboard"); setIsOpen(false); }}><FaHome /> الرئيسية</button></li>
-                    <li><button onClick={() => { navigate("community"); setIsOpen(false); }}><FaComments /> المنتدى</button></li>
-                    <li><button onClick={() => { navigate("news"); setIsOpen(false); }}><FaNewspaper /> أخبار وصور</button></li>
-                    <li><button onClick={() => { navigate("community/jobs"); setIsOpen(false); }}><FaBriefcase /> وظائف شاغرة</button></li>
-                    <li><button onClick={() => { navigate("GraduationBook"); setIsOpen(false); }}><FaBook /> طلب كتاب التخرج</button></li>
-                    <li><button onClick={() => { navigate("community/success-stories"); setIsOpen(false); }}><FaStar /> قصص نجاح</button></li>
+                    <li><button onClick={() => { navigate("/main"); setIsOpen(false); }}><FaHome /> الرئيسية</button></li>
+                    {user?.role === 'admin' && (
+                        <li><button onClick={() => { navigate("/dashboard"); setIsOpen(false); }}><FaTachometerAlt /> لوحة التحكم</button></li>
+                    )}
+                    <li><button onClick={() => { navigate("/community"); setIsOpen(false); }}><FaComments /> المنتدى</button></li>
+                    <li><button onClick={() => { navigate("/news"); setIsOpen(false); }}><FaNewspaper /> أخبار وصور</button></li>
+                    <li><button onClick={() => { navigate("/community/jobs"); setIsOpen(false); }}><FaBriefcase /> وظائف شاغرة</button></li>
+                    <li><button onClick={() => { navigate("/GraduationBook"); setIsOpen(false); }}><FaBook /> طلب كتاب التخرج</button></li>
+                    <li><button onClick={() => { navigate("/community/success-stories"); setIsOpen(false); }}><FaStar /> قصص نجاح</button></li>
                     {user?.role === 'admin' && (
                         <>
-                            <li><button onClick={() => { navigate("admin/articles"); setIsOpen(false); }}><FaImage /> إدارة المقالات</button></li>
-                            <li><button onClick={() => { navigate("admin/certificate"); setIsOpen(false); }}><FaCertificate /> شهادة تدريب</button></li>
+                            <li><button onClick={() => { navigate("/admin/articles"); setIsOpen(false); }}><FaImage /> إدارة المقالات</button></li>
+                            <li><button onClick={() => { navigate("/admin/certificate"); setIsOpen(false); }}><FaCertificate /> شهادة تدريب</button></li>
                         </>
                     )}
-                    <li><button onClick={() => { navigate("ProfilePage"); setIsOpen(false); }}><FaUser /> إعدادات المستخدم</button></li>
+                    <li><button onClick={() => { navigate("/ProfilePage"); setIsOpen(false); }}><FaUser /> إعدادات المستخدم</button></li>
                     <li><button onClick={handleLogout}><FaSignOutAlt /> تسجيل الخروج</button></li>
                 </ul>
             </div>

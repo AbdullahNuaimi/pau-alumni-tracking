@@ -38,7 +38,7 @@ const Login = () => {
             position: "top-right",
             transition: Bounce,
           });
-          navigate('/dashboard');
+          navigate('/main');
         } else {
           toast.error('البريد الإلكتروني أو كلمة المرور غير صحيحة', {
             position: "top-right",
