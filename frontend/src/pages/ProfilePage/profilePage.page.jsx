@@ -17,27 +17,27 @@ const ProfilePage = () => {
       </div>
 
       <div className="profile-sections">
-        {/* Profile Image Section */}
+
         <div className="profile-section">
           <ProfileImageUploader />
         </div>
 
-        {/* Personal Information Section */}
+
         <div className="profile-section">
           <EditUserInfo />
         </div>
 
-        {/* Education Section */}
+
         <div className="profile-section">
           <EducationSelection />
         </div>
 
-        {/* Career Section */}
+
         <div className="profile-section">
           <CareerEditor />
         </div>
 
-        {/* Password Update Section */}
+
         <div className="profile-section">
           <PasswordUpdater />
         </div>

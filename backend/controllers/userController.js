@@ -87,3 +87,30 @@ export const updateProfile = async (req, res, next) => {
     next(err);
   }
 };
+
+
+export const getUsersForAdmin = async (req, res) => {
+  try {
+    const users = await User.find()
+      .select('-password -__v')
+      .populate({
+        path: 'education.college',
+        select: 'name' 
+      })
+      .populate({
+        path: 'career.company',
+        select: 'name position' 
+      });
+      
+    res.status(200).json({
+      success: true,
+      data: users
+    });
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({
+      success: false,
+      message: 'فشل تحميل بيانات المستخدمين'
+    });
+  }
+};

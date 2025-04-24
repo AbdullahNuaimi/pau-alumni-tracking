@@ -13,6 +13,7 @@ import { postRoutes } from './routes/postRoutes.js';
 import { commentRoutes } from './routes/commentRoutes.js';
 import { userRoutes } from './routes/userRoutes.js';
 import { articleRoutes } from './routes/articleRoutes.js';
+import metricsRoutes from './routes/metricsRoutes.js';
 
 dotenv.config({ path: './config/config.env' });
 
@@ -44,7 +45,7 @@ app.use((req, res, next) => {
 // Routes
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/posts', postRoutes);
-// app.use('/api/v1/comments', commentRoutes);
+app.use('/api/v1/metrics', metricsRoutes);
 app.use('/api/v1/posts', commentRoutes);
 app.use('/api/v1/users', userRoutes);  
 app.use('/api/v1/articles', articleRoutes); 

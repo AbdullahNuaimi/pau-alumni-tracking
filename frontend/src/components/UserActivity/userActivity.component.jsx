@@ -40,7 +40,6 @@ const UserActivity = ({ user }) => {
 
         const { data } = await axios.get(endpoint);
         setActivities(data.data || []);
-        console.log(data.data)
       } catch (err) {
         console.error('Error fetching activities:', err);
         setError('حدث خطأ أثناء جلب البيانات');

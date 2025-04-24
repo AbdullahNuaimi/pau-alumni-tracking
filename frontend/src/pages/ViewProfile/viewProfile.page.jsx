@@ -127,7 +127,6 @@ const ViewProfile = () => {
     );
 };
 
-// Helper function to get social media icon
 const getSocialIcon = (label) => {
     switch(label.toLowerCase()) {
         case 'linkedin': return <FaLinkedin />;
@@ -137,11 +136,10 @@ const getSocialIcon = (label) => {
     }
 };
 
-// Helper function to format date
 const formatDate = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString);
     return date.toLocaleDateString('ar-EG');
 };
 
-export default ViewProfile;
+export default ViewProfile; 
