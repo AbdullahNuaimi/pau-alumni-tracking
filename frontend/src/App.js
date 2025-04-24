@@ -11,6 +11,7 @@ import ViewProfile from './pages/ViewProfile/viewProfile.page';
 import NewsAndPhotos from './pages/NewsAndPhotos/NewsAndPhotos.page';
 import ArticleDetail from './pages/ArticleDetail/ArticleDetail.page';
 import AdminArticleEditor from './pages/AdminArticleEditor/AdminArticleEditor.page';
+import AdminArticlesList from './pages/AdminArticlesList/adminArticlesList.page';
 import CertificateGenerator from './components/CertificateGenerator/CertificateGenerator.component';
 
 
@@ -42,9 +43,10 @@ const AppRoutes = () => {
           <Route path="/community/jobs" element={<Community jobs />} />
           <Route path="/community/success-stories" element={<Community successStories />} />
           <Route path="/news" element={<NewsAndPhotos />} />
-        <Route path="/articles/:slug" element={<ArticleDetail />} />
+        <Route path="/articles/:id" element={<ArticleDetail />} />
         <Route path="/admin/articles/new" element={<AdminArticleEditor />} />
         <Route path="/admin/articles/edit/:id" element={<AdminArticleEditor />} />
+        <Route path="/admin/articles" element={<AdminArticlesList />} />
         <Route path="/admin/certificate" element={<CertificateGenerator />} />
         </Routes>
       </main>

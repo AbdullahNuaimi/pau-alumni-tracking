@@ -7,14 +7,14 @@ import axios from 'axios';
 import './ArticleDetail.css';
 
 const ArticleDetail = () => {
-  const { slug } = useParams();
+  const { id: articleId } = useParams();
   const [article, setArticle] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        const res = await axios.get(`/api/v1/articles/${slug}`);
+        const res = await axios.get(`/api/v1/articles/${articleId}`);
         setArticle(res.data.data);
       } catch (err) {
         console.error(err);
@@ -24,7 +24,7 @@ const ArticleDetail = () => {
     };
 
     fetchArticle();
-  }, [slug]);
+  }, [articleId]);
 
   if (loading) {
     return <div className="loading">جاري التحميل...</div>;

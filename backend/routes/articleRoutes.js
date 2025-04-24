@@ -3,7 +3,10 @@ import {
   createArticle,
   getArticles,
   getArticleById,
-  uploadArticleImages
+  uploadArticleImages,
+  getArticlesForAdmin,
+  updateArticle,
+  deleteArticle
 } from '../controllers/articleController.js';
 import { protect, restrictTo } from '../middlewares/auth.js';
 import { upload } from '../middlewares/multer.js';
@@ -26,5 +29,17 @@ router.route('/')
   .post(protect, restrictTo('admin'), createArticle);
 
 router.get('/:id', getArticleById);
+
+
+router.get(
+  '/admin/list',
+  protect,
+  restrictTo('admin'),
+  getArticlesForAdmin
+);
+
+router.patch('/:id', protect, restrictTo('admin'), updateArticle);
+
+router.delete('/:id', protect, restrictTo('admin'), deleteArticle);
 
 export { router as articleRoutes };

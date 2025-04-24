@@ -2,6 +2,14 @@ import Article from '../models/Article.js';
 
 export const createArticle = async (req, res, next) => {
   try {
+    const existingArticle = await Article.findOne({ title: req.body.title });
+    if (existingArticle) {
+      return res.status(400).json({
+        success: false,
+        message: 'عنوان المقال مستخدم من قبل'
+      });
+    }
+
     const article = await Article.create({
       ...req.body,
       author: req.user.id
@@ -38,6 +46,50 @@ export const getArticles = async (req, res, next) => {
   }
 };
 
+export const updateArticle = async (req, res, next) => {
+  try {
+    const article = await Article.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+
+    if (!article) {
+      return res.status(404).json({
+        success: false,
+        message: 'المقال غير موجود'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: article
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteArticle = async (req, res, next) => {
+  try {
+    const article = await Article.findByIdAndDelete(req.params.id);
+
+    if (!article) {
+      return res.status(404).json({
+        success: false,
+        message: 'المقال غير موجود'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'تم حذف المقال بنجاح'
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const getArticleById = async (req, res, next) => {
   try {
     const article = await Article.findById( req.params.id )
@@ -68,10 +120,9 @@ export const uploadArticleImages = async (req, res, next) => {
         });
       }
   
-      // Return local file paths (relative to your server)
       const fileUrls = req.files.map(file => ({
-        url: `/uploads/articles/${file.filename}`, // Public URL path
-        path: file.path, // Full server path (e.g., for deletion later)
+        url: `/uploads/articles/${file.filename}`, 
+        path: file.path, 
       }));
   
       res.status(200).json({
@@ -81,4 +132,19 @@ export const uploadArticleImages = async (req, res, next) => {
     } catch (err) {
       next(err);
     }
+};
+
+export const getArticlesForAdmin = async (req, res, next) => {
+  try {
+    const articles = await Article.find()
+      .sort('-createdAt')
+      .populate('author', 'name');
+
+    res.status(200).json({
+      success: true,
+      data: articles
+    });
+  } catch (err) {
+    next(err);
+  }
 };

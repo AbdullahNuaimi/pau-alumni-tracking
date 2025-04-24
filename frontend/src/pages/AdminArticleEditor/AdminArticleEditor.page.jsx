@@ -1,12 +1,15 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './AdminArticleEditor.css';
 
 const AdminArticleEditor = () => {
+  const { id } = useParams();
+  const isEditMode = Boolean(id);
+  
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [excerpt, setExcerpt] = useState('');
@@ -15,11 +18,39 @@ const AdminArticleEditor = () => {
   const [categories, setCategories] = useState([]);
   const [status, setStatus] = useState('draft');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(isEditMode);
   const fileInputRef = useRef();
   const navigate = useNavigate();
 
+  // Fetch article data if in edit mode
+  useEffect(() => {
+    if (!isEditMode) return;
+
+    const fetchArticle = async () => {
+      try {
+        const res = await axios.get(`/api/v1/articles/${id}`);
+        const article = res.data.data;
+        
+        setTitle(article.title);
+        setContent(article.content);
+        setExcerpt(article.excerpt || '');
+        setFeaturedImage(article.featuredImage || null);
+        setImages(article.images || []);
+        setCategories(article.categories || []);
+        setStatus(article.status || 'draft');
+      } catch (err) {
+        console.error('Error fetching article:', err);
+        toast.error('حدث خطأ أثناء جلب بيانات المقال');
+        navigate('/admin/articles');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchArticle();
+  }, [id, isEditMode, navigate]);
+
   const handleImageUpload = async (e) => {
-    console.log("hello")
     const files = Array.from(e.target.files);
     const formData = new FormData();
     
@@ -38,8 +69,6 @@ const AdminArticleEditor = () => {
           }
         }
       );
-  
-      console.log('Upload response:', res.data); 
   
       if (files.length === 1) {
         setFeaturedImage(res.data.files[0].url); 
@@ -71,25 +100,38 @@ const AdminArticleEditor = () => {
         publishedAt: status === 'published' ? new Date() : null
       };
 
-      await axios.post('/api/v1/articles', articleData, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-
-      toast.success('تم حفظ المقال بنجاح');
+      if (isEditMode) {
+        await axios.patch(`/api/v1/articles/${id}`, articleData, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        toast.success('تم تحديث المقال بنجاح');
+      } else {
+        await axios.post('/api/v1/articles', articleData, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        toast.success('تم إنشاء المقال بنجاح');
+      }
+      
       navigate('/admin/articles');
     } catch (err) {
       console.error(err);
-      toast.error('حدث خطأ أثناء حفظ المقال');
+      toast.error(`حدث خطأ أثناء ${isEditMode ? 'تحديث' : 'إنشاء'} المقال`);
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  if (isLoading) {
+    return <div className="article-editor-container">جارٍ تحميل المقال...</div>;
+  }
+
   return (
     <div className="article-editor-container">
-      <h1>إنشاء مقال جديد</h1>
+      <h1>{isEditMode ? 'تعديل المقال' : 'إنشاء مقال جديد'}</h1>
       
       <div className="editor-section">
         <label>عنوان المقال</label>
@@ -193,7 +235,7 @@ const AdminArticleEditor = () => {
 
       <div className="editor-actions">
         <button onClick={handleSubmit} disabled={isSubmitting}>
-          {isSubmitting ? 'جاري الحفظ...' : 'حفظ المقال'}
+          {isSubmitting ? 'جاري الحفظ...' : isEditMode ? 'تحديث المقال' : 'حفظ المقال'}
         </button>
       </div>
     </div>

@@ -1,24 +1,27 @@
 import mongoose from 'mongoose';
-import slugify from 'slugify';
-
 
 const articleSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true,
-    trim: true
+    required: [true, 'Article title is required'],
+    trim: true,
+    unique: true
   },
-  sslug: { type: String, unique: true },
   content: {
     type: String,
-    required: true
+    required: [true, 'Article content is required']
   },
   excerpt: {
     type: String,
-    maxlength: 160
+    maxlength: [160, 'Excerpt cannot exceed 160 characters']
   },
-  featuredImage: String,
-  images: [String],
+  featuredImage: {
+    type: String,
+    default: null
+  },
+  images: [{
+    type: String
+  }],
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -26,32 +29,34 @@ const articleSchema = new mongoose.Schema({
   },
   categories: [{
     type: String,
-    enum: ['news', 'events', 'announcements', 'photos']
+    enum: {
+      values: ['news', 'events', 'announcements', 'photos'],
+      message: 'Invalid category'
+    }
   }],
   status: {
     type: String,
     enum: ['draft', 'published', 'archived'],
     default: 'draft'
   },
-  publishedAt: Date,
+  publishedAt: {
+    type: Date,
+    default: null
+  },
   metaTitle: String,
   metaDescription: String
-}, { 
+}, {
   timestamps: true,
   toJSON: { virtuals: true },
-  toObject: { virtuals: true } 
+  toObject: { virtuals: true }
 });
 
+// Add any necessary virtuals or methods here
+// Example virtual for formatted published date
+articleSchema.virtual('formattedPublishedAt').get(function() {
+  return this.publishedAt?.toLocaleDateString('ar-EG') || 'Not published';
+});
 
-articleSchema.pre('save', function(next) {
-    if (!this.slug) {
-      this.slug = slugify(this.title, { 
-        lower: true,
-        strict: true 
-      });
-    }
-    next();
-  });
-  
+const Article = mongoose.model('Article', articleSchema);
 
-export default mongoose.model('Article', articleSchema);
+export default Article;
