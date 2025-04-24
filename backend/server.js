@@ -26,23 +26,23 @@ const __dirname = path.dirname(__filename);
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Middleware
+
 app.use(cors({
-  origin: 'http://localhost:3000', // Your frontend URL
+  origin: 'http://localhost:3000', 
   credentials: true,
 }));
 app.use(express.json(({ limit: '50mb' })));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(morgan('dev'));
 
-// Arabic content-type support
+
 app.use((req, res, next) => {
   res.header('Content-Type', 'application/json;charset=UTF-8');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   next();
 });
 
-// Routes
+
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/posts', postRoutes);
 app.use('/api/v1/metrics', metricsRoutes);
@@ -50,8 +50,7 @@ app.use('/api/v1/posts', commentRoutes);
 app.use('/api/v1/users', userRoutes);  
 app.use('/api/v1/articles', articleRoutes); 
 
-// Error handling
-// app.use(errorHandler);
+
 
 const PORT = process.env.PORT || 5000;
 
