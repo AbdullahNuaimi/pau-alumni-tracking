@@ -16,6 +16,10 @@ import CertificateGenerator from './components/CertificateGenerator/CertificateG
 import Guard from './components/Guard/Guard.component';
 import MainPage from './pages/Main/main.page'; 
 import NavigationBar from './components/NavigationBar/navigationBar.component';
+import Footer from './components/Footer/Footer.component';
+import NotFound from './pages/NotFound/NotFound.page';
+
+
 import { UserProvider } from './contexts/UserContext';
 import { ToastContainer, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -45,8 +49,10 @@ const AppRoutes = () => {
           <Route path="/admin/articles/edit/:id" element={<Guard allowedRoles={['admin']}><AdminArticleEditor /></Guard>} />
           <Route path="/admin/articles" element={<Guard allowedRoles={['admin']}><AdminArticlesList /></Guard>} />
           <Route path="/admin/certificate" element={<Guard allowedRoles={['admin']}><CertificateGenerator /></Guard>} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
+      <Footer />
     </>
   );
 };

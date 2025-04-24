@@ -64,7 +64,7 @@ const NavigationBar = () => {
                     <h2>موقع الخريجين</h2>
                 </div>
                 <ul>
-                    <li><button onClick={() => { navigate("/main"); setIsOpen(false); }}><FaHome /> الرئيسية</button></li>
+                    <li><button onClick={() => { navigate("/"); setIsOpen(false); localStorage.clear() }}><FaHome /> الرئيسية</button></li>
                     {user?.role === 'admin' && (
                         <li><button onClick={() => { navigate("/dashboard"); setIsOpen(false); }}><FaTachometerAlt /> لوحة التحكم</button></li>
                     )}
