@@ -325,4 +325,42 @@ export const getFullPost = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+
+};
+
+// @desc    Get posts by user
+// @route   GET /api/v1/posts/comments/user/:userId
+// @access  Private
+export const getUserComments = async (req, res, next) => {
+  try {
+    const comments = await Comment.find({ author: req.params.userId })
+      .populate('post', 'content')
+      .sort('-createdAt')
+      .lean();
+
+    res.status(200).json({
+      success: true,
+      data: comments
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc    Get posts liked by user
+// @route   GET /api/v1/posts/likes/user/:userId
+// @access  Private
+export const getUserLikedPosts = async (req, res, next) => {
+  try {
+    const posts = await Post.find({ likes: req.params.userId })
+      .sort('-createdAt')
+      .lean();
+
+    res.status(200).json({
+      success: true,
+      data: posts
+    });
+  } catch (err) {
+    next(err);
+  }
 };
