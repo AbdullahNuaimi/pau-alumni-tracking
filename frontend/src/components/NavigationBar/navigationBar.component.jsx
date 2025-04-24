@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { logout } from "../../services/authService";
 import { useUser } from '../../contexts/UserContext';
 
@@ -22,7 +22,6 @@ import "./navigationBar.css";
 import logo from "../../assets/navigation_bar_logo.png";
 
 const NavigationBar = () => {
-    const location = useLocation();
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -47,7 +46,7 @@ const NavigationBar = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    if (location.pathname === "/" || location.pathname === "/register") {
+    if (!localStorage.getItem("user")) {
         return null;
     }
 

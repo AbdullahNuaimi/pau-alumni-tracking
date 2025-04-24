@@ -147,7 +147,7 @@ const Register = () => {
         </form>
 
         <div className="auth-footer">
-          <span>لديك حساب بالفعل؟ <button className="text-btn" onClick={() => navigate('/')}>تسجيل الدخول</button></span>
+          <span>لديك حساب بالفعل؟ <button className="text-btn" onClick={() => navigate('/login')}>تسجيل الدخول</button></span>
         </div>
       </div>
     </div>

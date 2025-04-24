@@ -1,10 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { useUser } from '../../contexts/UserContext';
 
 const Guard = ({ children, allowedRoles }) => {
-const {user} = useUser();
+const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,12 +16,10 @@ const {user} = useUser();
     }
   }, [user, allowedRoles, navigate]);
 
-  // If user has permission, render children
   if (user && allowedRoles.includes(user.role)) {
     return children;
   }
 
-  // Otherwise, render nothing (or loading spinner)
   return null;
 };
 

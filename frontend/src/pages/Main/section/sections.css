@@ -1,0 +1,95 @@
+/* About Section */
+.content-box {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 10px;
+    line-height: 1.8;
+  }
+  
+  .mission-vision {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  
+  /* Features Section */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+  }
+  
+  .feature-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+  
+  .feature-card .icon {
+    font-size: 2.5rem;
+    color: #3498db;
+    margin-bottom: 1rem;
+  }
+  
+  /* FAQ Section */
+  .faq-list {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .faq-item {
+    background: white;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  .faq-item summary {
+    padding: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    list-style: none;
+  }
+  
+  .faq-item p {
+    padding: 0 1rem 1rem;
+    margin-top: 0;
+  }
+  
+  /* Contact Section */
+  .contact-methods {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .contact-card {
+    text-align: center;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  }
+  
+  .social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+  
+  .social-icons a {
+    color: #2c3e50;
+    font-size: 1.5rem;
+    transition: all 0.3s;
+  }
+  
+  .social-icons a:hover {
+    color: #3498db;
+    transform: translateY(-3px);
+  }

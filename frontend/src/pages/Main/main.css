@@ -1,0 +1,97 @@
+/* Main Container */
+.main-container {
+    direction: rtl;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: 'Tahoma', Arial, sans-serif;
+  }
+  
+  /* Hero Section */
+  .hero-section {
+    text-align: center;
+    padding: 3rem 0;
+    background: linear-gradient(135deg, #2c3e50, #3498db);
+    color: white;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+  }
+  
+  .hero-section h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  /* Tabs Navigation */
+  .main-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  
+  .main-tabs button {
+    padding: 0.8rem 1.5rem;
+    background: #f8f9fa;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: bold;
+    transition: all 0.3s;
+  }
+  
+  .main-tabs button.active {
+    background: #3498db;
+    color: white;
+  }
+  
+  .main-tabs button:hover {
+    transform: translateY(-3px);
+  }
+  
+  /* Tab Content */
+  .tab-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    min-height: 400px;
+  }
+  
+  /* Quick Links */
+  .quick-links {
+    text-align: center;
+    margin-top: 3rem;
+  }
+  
+  .link-button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: #2ecc71;
+    color: white;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: bold;
+    transition: all 0.3s;
+  }
+  
+  .link-button:hover {
+    background: #27ae60;
+    transform: translateY(-3px);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .hero-section h1 {
+      font-size: 1.8rem;
+    }
+    
+    .main-tabs {
+      flex-direction: column;
+      align-items: center;
+    }
+  }

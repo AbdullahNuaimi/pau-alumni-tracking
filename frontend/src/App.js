@@ -30,17 +30,16 @@ const AppRoutes = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/main" element={<MainPage />} />
           <Route path="/dashboard" element={<Guard allowedRoles={['admin']}><Dashboard /></Guard>} />
-          <Route path="/" element={<Login />} />
-          <Route path="/GraduationBook" element={<GraduationBook />} />
-          <Route path="/ProfilePage" element={<ProfilePage />} />
-          <Route path="/ViewProfile/:userId" element={<ViewProfile />} />
-          <Route path="/community" element={<Community />} />
-          <Route path="/posts/:postId/full" element={<PostDetail />} />
-          <Route path="/community/jobs" element={<Community jobs />} />
-          <Route path="/community/success-stories" element={<Community successStories />} />
-          <Route path="/news" element={<NewsAndPhotos />} />
+          <Route path="/" element={<MainPage />} />
+          <Route path="/GraduationBook" element={<Guard allowedRoles={['admin','user']}><GraduationBook /></Guard>} />
+          <Route path="/ProfilePage" element={<Guard allowedRoles={['admin','user']}><ProfilePage /></Guard>} />
+          <Route path="/ViewProfile/:userId" element={<Guard allowedRoles={['admin','user']}><ViewProfile /></Guard>} />
+          <Route path="/community" element={<Guard allowedRoles={['admin','user']}><Community /></Guard>} />
+          <Route path="/posts/:postId/full" element={<Guard allowedRoles={['admin','user']}><PostDetail /></Guard>} />
+          <Route path="/community/jobs" element={<Guard allowedRoles={['admin','user']}><Community jobs /></Guard>} />
+          <Route path="/community/success-stories" element={<Guard allowedRoles={['admin','user']}><Community successStories /></Guard>} />
+          <Route path="/news" element={<Guard allowedRoles={['admin','user']}><NewsAndPhotos /></Guard>}/>
           <Route path="/articles/:id" element={<Guard allowedRoles={['admin','user']}><ArticleDetail /></Guard>} />
           <Route path="/admin/articles/new" element={<Guard allowedRoles={['admin']}><AdminArticleEditor /></Guard>} />
           <Route path="/admin/articles/edit/:id" element={<Guard allowedRoles={['admin']}><AdminArticleEditor /></Guard>} />
