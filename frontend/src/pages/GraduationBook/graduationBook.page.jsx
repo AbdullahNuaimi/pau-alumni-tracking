@@ -2,7 +2,6 @@ import { FaBook, FaCalendarAlt, FaDownload } from 'react-icons/fa';
 import './graduationBook.css';
 
 const GraduationBook = () => {
-  // Sample data - replace with your actual graduation books
   const graduationBooks = [
     {
       year: '2023',
