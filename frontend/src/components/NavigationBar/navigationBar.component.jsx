@@ -53,7 +53,6 @@ const NavigationBar = () => {
 
     return (
         <>
-            {/* Mobile Toggle Button */}
             {isMobile && (
                 <button className="mobile-toggle" onClick={() => setIsOpen(!isOpen)}>
                     {isOpen ? <FaTimes /> : <FaBars />}
@@ -80,7 +79,6 @@ const NavigationBar = () => {
                 </ul>
             </div>
 
-            {/* Overlay for mobile */}
             {isMobile && isOpen && (
                 <div className="sidebar-overlay" onClick={() => setIsOpen(false)} />
             )}
