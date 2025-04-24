@@ -13,7 +13,7 @@ import ArticleDetail from './pages/ArticleDetail/ArticleDetail.page';
 import AdminArticleEditor from './pages/AdminArticleEditor/AdminArticleEditor.page';
 import AdminArticlesList from './pages/AdminArticlesList/adminArticlesList.page';
 import CertificateGenerator from './components/CertificateGenerator/CertificateGenerator.component';
-
+import Guard from './components/Guard/Guard.component';
 
 
 import NavigationBar from './components/NavigationBar/navigationBar.component';
@@ -43,11 +43,11 @@ const AppRoutes = () => {
           <Route path="/community/jobs" element={<Community jobs />} />
           <Route path="/community/success-stories" element={<Community successStories />} />
           <Route path="/news" element={<NewsAndPhotos />} />
-        <Route path="/articles/:id" element={<ArticleDetail />} />
-        <Route path="/admin/articles/new" element={<AdminArticleEditor />} />
-        <Route path="/admin/articles/edit/:id" element={<AdminArticleEditor />} />
-        <Route path="/admin/articles" element={<AdminArticlesList />} />
-        <Route path="/admin/certificate" element={<CertificateGenerator />} />
+        <Route path="/articles/:id" element={<Guard allowedRoles={['admin','user']}><ArticleDetail /></Guard>} />
+        <Route path="/admin/articles/new" element={<Guard allowedRoles={['admin']}><AdminArticleEditor /></Guard>} />
+        <Route path="/admin/articles/edit/:id" element={<Guard allowedRoles={['admin']}><AdminArticleEditor /></Guard>} />
+        <Route path="/admin/articles" element={<Guard allowedRoles={['admin']}><AdminArticlesList /></Guard>} />
+        <Route path="/admin/certificate" element={<Guard allowedRoles={['admin']}><CertificateGenerator /></Guard>} />
         </Routes>
       </main>
     </>
