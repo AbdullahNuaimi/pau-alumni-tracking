@@ -15,7 +15,8 @@ import {
     FaBars,
     FaTimes,
     FaNewspaper,
-    FaImage
+    FaImage,
+    FaCertificate
 } from 'react-icons/fa';
 import "./navigationBar.css";
 import logo from "../../assets/navigation_bar_logo.png";
@@ -72,7 +73,10 @@ const NavigationBar = () => {
                     <li><button onClick={() => { navigate("GraduationBook"); setIsOpen(false); }}><FaBook /> طلب كتاب التخرج</button></li>
                     <li><button onClick={() => { navigate("community/success-stories"); setIsOpen(false); }}><FaStar /> قصص نجاح</button></li>
                     {user?.role === 'admin' && (
-                        <li><button onClick={() => { navigate("admin/articles"); setIsOpen(false); }}><FaImage /> إدارة المقالات</button></li>
+                        <>
+                            <li><button onClick={() => { navigate("admin/articles"); setIsOpen(false); }}><FaImage /> إدارة المقالات</button></li>
+                            <li><button onClick={() => { navigate("admin/certificate"); setIsOpen(false); }}><FaCertificate /> شهادة تدريب</button></li>
+                        </>
                     )}
                     <li><button onClick={() => { navigate("ProfilePage"); setIsOpen(false); }}><FaUser /> إعدادات المستخدم</button></li>
                     <li><button onClick={handleLogout}><FaSignOutAlt /> تسجيل الخروج</button></li>

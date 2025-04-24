@@ -10,6 +10,8 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.8.4",
     "date-fns": "^4.1.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.1",
     "react": "^18.2.0",
     "react-datepicker": "^8.2.1",
     "react-dom": "^18.2.0",
@@ -18,6 +20,7 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.4.1",
     "react-scripts": "5.0.1",
+    "react-to-print": "^3.0.6",
     "react-toastify": "^11.0.5",
     "web-vitals": "^2.1.4"
   },

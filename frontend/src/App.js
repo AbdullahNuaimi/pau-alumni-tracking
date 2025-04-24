@@ -11,6 +11,8 @@ import ViewProfile from './pages/ViewProfile/viewProfile.page';
 import NewsAndPhotos from './pages/NewsAndPhotos/NewsAndPhotos.page';
 import ArticleDetail from './pages/ArticleDetail/ArticleDetail.page';
 import AdminArticleEditor from './pages/AdminArticleEditor/AdminArticleEditor.page';
+import CertificateGenerator from './components/CertificateGenerator/CertificateGenerator.component';
+
 
 
 import NavigationBar from './components/NavigationBar/navigationBar.component';
@@ -43,6 +45,7 @@ const AppRoutes = () => {
         <Route path="/articles/:slug" element={<ArticleDetail />} />
         <Route path="/admin/articles/new" element={<AdminArticleEditor />} />
         <Route path="/admin/articles/edit/:id" element={<AdminArticleEditor />} />
+        <Route path="/admin/certificate" element={<CertificateGenerator />} />
         </Routes>
       </main>
     </>
