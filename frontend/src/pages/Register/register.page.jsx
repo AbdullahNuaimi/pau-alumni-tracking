@@ -49,7 +49,7 @@ const Register = () => {
             position: "top-right",
             transition: Bounce,
           });
-          navigate('/');
+          navigate('/login');
         } else {
           toast.error(result.message || 'حدث خطأ أثناء التسجيل', {
             position: "top-right",

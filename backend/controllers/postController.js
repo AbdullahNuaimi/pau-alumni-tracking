@@ -364,3 +364,21 @@ export const getUserLikedPosts = async (req, res, next) => {
     next(err);
   }
 };
+
+// @desc    Get posts liked by user
+// @route   GET /api/v1/posts/likes/user/:userId
+// @access  Private
+export const getUserPosts = async (req, res, next) => {
+  try {
+    const posts = await Post.find({ author: req.params.userId })
+      .sort('-createdAt')
+      .lean();
+
+    res.status(200).json({
+      success: true,
+      data: posts
+    });
+  } catch (err) {
+    next(err);
+  }
+};

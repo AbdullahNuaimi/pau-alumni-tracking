@@ -26,7 +26,7 @@ const UserActivity = ({ user }) => {
         
         switch (activeTab) {
           case 'posts':
-            endpoint = `/api/v1/posts?userId=${user._id}`;
+            endpoint = `/api/v1/posts/getPosts/${user._id}`;
             break;
           case 'comments':
             endpoint = `/api/v1/posts/comments/user/${user._id}`;

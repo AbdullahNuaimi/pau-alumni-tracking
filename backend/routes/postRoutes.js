@@ -9,7 +9,8 @@ import {
   likePost,
   getFullPost,
   getUserComments, 
-  getUserLikedPosts
+  getUserLikedPosts,
+  getUserPosts
 } from '../controllers/postController.js';
 import { protect, restrictTo } from '../middlewares/auth.js';
 
@@ -30,5 +31,6 @@ router.patch('/:id/like', protect, likePost);
 router.get('/:id/full', protect, getFullPost);
 router.get('/comments/user/:userId', protect, getUserComments);
 router.get('/likes/user/:userId', protect, getUserLikedPosts);
+router.get('/getPosts/:userId', protect, getUserPosts);
 
 export { router as postRoutes };

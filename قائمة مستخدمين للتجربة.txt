@@ -1,0 +1,10 @@
+1. ID: 1000001 | Name: أحمد منصور     | Email: ahmad.mansour@example.com       | Password: A7hmad@123
+2. ID: 1000002 | Name: ليلى خالد      | Email: laila.khaled@example.com        | Password: Laila2024
+3. ID: 1000003 | Name: يوسف العلي      | Email: yusuf.ali@example.com           | Password: YAli#2023
+4. ID: 1000004 | Name: مريم زيدان     | Email: mariam.zeidan@example.com       | Password: Mariam88
+5. ID: 1000005 | Name: خالد عيسى      | Email: khaled.issa@example.com         | Password: KIssa123
+6. ID: 1000006 | Name: سارة حسين      | Email: sara.hussein@example.com        | Password: SaraH1995
+7. ID: 1000007 | Name: عمر الطيبي     | Email: omar.tayeb@example.com          | Password: Omtayeb1
+8. ID: 1000008 | Name: ريم الجبوري     | Email: reem.jabouri@example.com        | Password: Reem#22
+9. ID: 1000009 | Name: مازن ناصر      | Email: mazen.nasser@example.com        | Password: Mazen991
+10. ID: 1000010 | Name: هبة صبري      | Email: heba.sabri@example.com          | Password: Heba@567
