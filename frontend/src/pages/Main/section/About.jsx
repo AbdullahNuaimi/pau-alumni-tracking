@@ -17,7 +17,7 @@ const About = () => {
         <div className="mission-vision">
           <div className="card">
             <h3>رؤيتنا</h3>
-            <p>أن نكون المنصة الرائدة في توثيق العلاقة بين الخريجين و alma mater</p>
+            <p>أن نكون المنصة الرائدة في توثيق العلاقة بين الخريجين والجامعة </p>
           </div>
           <div className="card">
             <h3>رسالتنا</h3>
