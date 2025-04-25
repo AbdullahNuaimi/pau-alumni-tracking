@@ -4,8 +4,8 @@ import Post from '../models/Post.js';
 export const addComment = async (req, res, next) => {
   try {
     const { content } = req.body;
-    const postId = req.params.id;
-
+    const postId = req.params.postId;
+    console.log("post ID: " , req.params.postId);
     if (!content) {
       return res.status(400).json({
         success: false,
@@ -103,7 +103,7 @@ export const updateComment = async (req, res, next) => {
       });
     }
 
-    // Check if user is author or admin
+
     if (comment.author.toString() !== req.user.id && req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
