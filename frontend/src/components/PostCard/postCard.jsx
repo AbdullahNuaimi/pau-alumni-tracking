@@ -102,7 +102,7 @@ const PostCard = ({ post, onApprove, onReject, onLike, isDetailView = false }) =
 
   const handleViewUser = (e) => {
     e.stopPropagation();
-    navigate(`/ViewProfile/${user._id}`);
+    navigate(`/ViewProfile/${post.authorId}`);
   };
 
   const handlePostClick = (e) => {

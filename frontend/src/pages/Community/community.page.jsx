@@ -25,6 +25,7 @@ const Community = () => {
         id: post._id,
         author: post.author?.name || 'Unknown',
         authorImage: post.author?.profilePic || '/default-avatar.png',
+        authorId: post.author?._id,
         date: new Date(post.createdAt).toLocaleDateString('ar-EG'),
         comments: post.comments || [],
         likes: post.likes || []

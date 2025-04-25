@@ -71,7 +71,7 @@ export const getAllPosts = async (req, res, next) => {
         };
 
     const posts = await Post.find(filter)
-      .populate('author', 'name profilePic universityId')
+      .populate('author', 'name profilePic universityId _id')
       .populate({
         path: 'comments',
         populate: { path: 'author', select: 'name profilePic' }

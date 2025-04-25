@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 import './comment.css';
 
 const Comment = ({ post, user, onCommentAdded }) => {
   const [commentText, setCommentText] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showComments, setShowComments] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -75,7 +78,7 @@ const Comment = ({ post, user, onCommentAdded }) => {
         <div className="comments-list">
           {post.comments?.length > 0 ? (
             post.comments.map(comment => (
-              <div key={comment._id} className="comment-item">
+              <div key={comment._id} className="comment-item" onClick={()=>{navigate(`/ViewProfile/${comment.author._id}`)}}>
                 <img
                   src={comment.author?.profilePic || '/default-avatar.png'}
                   alt={comment.author?.name}
