@@ -56,7 +56,7 @@ const Dashboard = () => {
         setLoading(false);
       }
     };
-
+    console.log("metrics: ", metrics.growthData);
     if (user?.role === 'admin') {
       fetchData();
     }
@@ -77,7 +77,6 @@ const Dashboard = () => {
     return <div className="loading">جاري تحميل البيانات...</div>;
   }
 
-  // Prepare data for charts
   const collegeData = Object.entries(metrics.usersByCollege).map(([name, value]) => ({ name, value }));
   const employmentData = [
     { name: 'موظفين', value: metrics.employmentStats.employed },

@@ -125,7 +125,7 @@ const PostCard = ({ post, onApprove, onReject, onLike, isDetailView = false }) =
         opacity: postStatus === 'rejected' ? 0.7 : 1,
         cursor: isDetailView ? 'default' : 'pointer'
       }}
-      onClick={!isDetailView ? handlePostClick : undefined}
+
     >
       {showPendingStatus && (
         <div className="pending-badge">
@@ -173,7 +173,9 @@ const PostCard = ({ post, onApprove, onReject, onLike, isDetailView = false }) =
         </div>
       </div>
 
-      <div className="post-content">
+      <div className="post-content"
+        onClick={!isDetailView ? handlePostClick : undefined}
+      >
         <p>{post.content}</p>
         {post.image && (
           <>

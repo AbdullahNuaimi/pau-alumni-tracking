@@ -1,5 +1,6 @@
 import Comment from '../models/Comment.js';
 import Post from '../models/Post.js';
+import User from '../models/User.js';
 
 export const createPost = async (req, res, next) => {
   try {
@@ -27,6 +28,12 @@ export const createPost = async (req, res, next) => {
       image, 
       status: req.user.role === 'admin' ? 'approved' : 'pending'
     })
+
+    await User.findByIdAndUpdate(
+      req.user.id,
+      { $push: { posts: post._id } },
+      { new: true }
+    );
 
     const populatedPost = await Post.findById(post._id)
     .populate('author', 'name profilePic universityId')
