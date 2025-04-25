@@ -56,7 +56,6 @@ const Dashboard = () => {
         setLoading(false);
       }
     };
-    console.log("metrics: ", metrics.growthData);
     if (user?.role === 'admin') {
       fetchData();
     }
