@@ -14,10 +14,12 @@ import AdminArticleEditor from './pages/AdminArticleEditor/AdminArticleEditor.pa
 import AdminArticlesList from './pages/AdminArticlesList/adminArticlesList.page';
 import CertificateGenerator from './components/CertificateGenerator/CertificateGenerator.component';
 import Guard from './components/Guard/Guard.component';
-import MainPage from './pages/Main/main.page'; 
+import MainPage from './pages/Main/main.page';
 import NavigationBar from './components/NavigationBar/navigationBar.component';
 import Footer from './components/Footer/Footer.component';
 import NotFound from './pages/NotFound/NotFound.page';
+import MessagingLayout from './pages/MessagingLayout/MessagingLayout.page';
+import Conversation from './components/Conversation/Conversation.component';
 
 
 import { UserProvider } from './contexts/UserContext';
@@ -25,8 +27,8 @@ import { ToastContainer, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const AppRoutes = () => {
-  const location = useLocation(); 
-  
+  const location = useLocation();
+
   return (
     <>
       {!['/', '/login', '/register'].includes(location.pathname) && <NavigationBar />}
@@ -36,19 +38,23 @@ const AppRoutes = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Guard allowedRoles={['admin']}><Dashboard /></Guard>} />
           <Route path="/" element={<MainPage />} />
-          <Route path="/GraduationBook" element={<Guard allowedRoles={['admin','user']}><GraduationBook /></Guard>} />
-          <Route path="/ProfilePage" element={<Guard allowedRoles={['admin','user']}><ProfilePage /></Guard>} />
-          <Route path="/ViewProfile/:userId" element={<Guard allowedRoles={['admin','user']}><ViewProfile /></Guard>} />
-          <Route path="/community" element={<Guard allowedRoles={['admin','user']}><Community /></Guard>} />
-          <Route path="/posts/:postId/full" element={<Guard allowedRoles={['admin','user']}><PostDetail /></Guard>} />
-          <Route path="/community/jobs" element={<Guard allowedRoles={['admin','user']}><Community jobs /></Guard>} />
-          <Route path="/community/success-stories" element={<Guard allowedRoles={['admin','user']}><Community successStories /></Guard>} />
-          <Route path="/news" element={<Guard allowedRoles={['admin','user']}><NewsAndPhotos /></Guard>}/>
-          <Route path="/articles/:id" element={<Guard allowedRoles={['admin','user']}><ArticleDetail /></Guard>} />
+          <Route path="/GraduationBook" element={<Guard allowedRoles={['admin', 'user']}><GraduationBook /></Guard>} />
+          <Route path="/ProfilePage" element={<Guard allowedRoles={['admin', 'user']}><ProfilePage /></Guard>} />
+          <Route path="/ViewProfile/:userId" element={<Guard allowedRoles={['admin', 'user']}><ViewProfile /></Guard>} />
+          <Route path="/community" element={<Guard allowedRoles={['admin', 'user']}><Community /></Guard>} />
+          <Route path="/posts/:postId/full" element={<Guard allowedRoles={['admin', 'user']}><PostDetail /></Guard>} />
+          <Route path="/community/jobs" element={<Guard allowedRoles={['admin', 'user']}><Community jobs /></Guard>} />
+          <Route path="/community/success-stories" element={<Guard allowedRoles={['admin', 'user']}><Community successStories /></Guard>} />
+          <Route path="/news" element={<Guard allowedRoles={['admin', 'user']}><NewsAndPhotos /></Guard>} />
+          <Route path="/articles/:id" element={<Guard allowedRoles={['admin', 'user']}><ArticleDetail /></Guard>} />
           <Route path="/admin/articles/new" element={<Guard allowedRoles={['admin']}><AdminArticleEditor /></Guard>} />
           <Route path="/admin/articles/edit/:id" element={<Guard allowedRoles={['admin']}><AdminArticleEditor /></Guard>} />
           <Route path="/admin/articles" element={<Guard allowedRoles={['admin']}><AdminArticlesList /></Guard>} />
           <Route path="/admin/certificate" element={<Guard allowedRoles={['admin']}><CertificateGenerator /></Guard>} />
+          <Route path="/messages" element={<MessagingLayout />}>
+            <Route index element={<div className="select-conversation">اختر محادثة</div>} />
+            <Route path=":userId" element={<Conversation />} />
+          </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
@@ -75,7 +81,7 @@ function App() {
           transition={Bounce}
         />
         <BrowserRouter>
-          <AppRoutes /> 
+          <AppRoutes />
         </BrowserRouter>
       </UserProvider>
     </div>
