@@ -19,6 +19,21 @@ const Community = () => {
     const location = useLocation();
     const postsListRef = useRef(null);
     const isFetchingRef = useRef(false);
+    const [selectedYear, setSelectedYear] = useState('all');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [years, setYears] = useState([]);
+
+    useEffect(() => {
+        const fetchYears = async () => {
+            try {
+                const response = await axios.get('/api/v1/users/years/getYears');
+                setYears(response.data.data);
+            } catch (error) {
+                console.error('Error fetching years:', error);
+            }
+        };
+        fetchYears();
+    }, []);
 
     const formatPost = (post) => ({
         ...post,
@@ -30,24 +45,34 @@ const Community = () => {
         comments: post.comments || [],
         likes: post.likes || []
     });
-    
+
     const applyFilter = useCallback((posts) => {
         return posts.filter(post => {
             if (!post) return false;
+    
 
             const statusMatch =
                 activeFilter === 'pending' ?
                     post.status === 'pending' :
                     (post.status === 'approved' || post.author?._id === user?.id || user?.role === 'admin');
-
+    
             const typeMatch =
                 ['all', 'pending'].includes(activeFilter) ||
                 post.type === activeFilter;
-
-            return statusMatch && typeMatch;
-        });
-    }, [activeFilter, user]);
     
+
+            const yearMatch = selectedYear === 'all' || true;
+    
+
+            const searchMatch = 
+                !searchQuery ||
+                post.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                (post.author?.name && post.author.name.toLowerCase().includes(searchQuery.toLowerCase()));
+    
+            return statusMatch && typeMatch && yearMatch && searchMatch;
+        });
+    }, [activeFilter, user, selectedYear, searchQuery]);
+
     const fetchPosts = useCallback(async (pageNum = 1, isInitialLoad = false) => {
         if (isFetchingRef.current) return;
         isFetchingRef.current = true;
@@ -59,28 +84,30 @@ const Community = () => {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                     role: JSON.parse(localStorage.getItem('user')).role,
                 },
-                params: { 
+                params: {
                     userId,
                     page: pageNum,
                     limit: 4,
+                    year: selectedYear !== 'all' ? selectedYear : undefined,
+                    search: searchQuery || undefined,
                     _: Date.now()
                 }
             });
 
             const newPosts = response.data.data;
             setHasMore(newPosts.length === 4);
-            
+
             setAllPosts(prev => {
                 const existingIds = new Set(prev.map(p => p._id));
                 const uniqueNewPosts = newPosts.filter(post => !existingIds.has(post._id));
-                
-                const updatedPosts = isInitialLoad 
+
+                const updatedPosts = isInitialLoad
                     ? newPosts.map(formatPost)
                     : [...prev, ...uniqueNewPosts.map(formatPost)];
-                
+
                 const filtered = applyFilter(updatedPosts);
                 setFilteredPosts(filtered);
-                
+
                 return updatedPosts;
             });
 
@@ -96,24 +123,25 @@ const Community = () => {
                 setIsFetchingMore(false);
             }
         }
-    }, [user, applyFilter]);
+    }, [user, applyFilter, selectedYear, searchQuery]);
 
 
     useEffect(() => {
         setPage(1);
         setHasMore(true);
         fetchPosts(1, true);
-    }, [activeFilter, fetchPosts]);
+    }, [activeFilter, selectedYear, searchQuery, fetchPosts]);
+
 
     useEffect(() => {
         const filtered = applyFilter(allPosts);
         setFilteredPosts(filtered);
-    }, [allPosts, activeFilter, applyFilter]);
+    }, [allPosts, activeFilter, selectedYear, searchQuery, applyFilter]);
 
 
     useEffect(() => {
         if (!postsListRef.current || !hasMore) return;
-    
+
         const currentRef = postsListRef.current;
         const observer = new IntersectionObserver(
             (entries) => {
@@ -127,13 +155,13 @@ const Community = () => {
                 threshold: 0.1
             }
         );
-    
+
         const sentinel = document.createElement('div');
         sentinel.style.height = '1px';
         sentinel.id = 'scroll-sentinel';
         currentRef.appendChild(sentinel);
         observer.observe(sentinel);
-    
+
         return () => {
             observer.disconnect();
             const existingSentinel = document.getElementById('scroll-sentinel');
@@ -223,6 +251,26 @@ const Community = () => {
             <h1>المجتمع الأكاديمي</h1>
 
             <CreatePost onPostSubmit={handlePostSubmit} />
+            <div className="search-filter-container">
+                <input
+                    type="text"
+                    placeholder="ابحث عن منشورات أو أعضاء..."
+                    className="search-box"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                />
+
+                <select
+                    className="year-filter"
+                    value={selectedYear}
+                    onChange={(e) => setSelectedYear(e.target.value)}
+                >
+                    <option value="all">كل السنوات</option>
+                    {years.map(year => (
+                        <option key={year} value={year}>20{year}</option>
+                    ))}
+                </select>
+            </div>
             <div className="post-filters">
                 {[
                     { id: 'all', label: 'الكل' },

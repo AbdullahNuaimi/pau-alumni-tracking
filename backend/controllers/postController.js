@@ -60,33 +60,108 @@ export const getAllPosts = async (req, res, next) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
+    const yearFilter = req.query.year;
+    const searchQuery = req.query.search;
 
-    const filter = req.headers.role === 'admin' 
+    // Base match for permissions
+    let baseMatch = req.headers.role === 'admin' 
       ? {} 
       : {
           $or: [
             { status: 'approved' },
-            { author: req.query.userId, status: 'pending' }
+            { author: new mongoose.Types.ObjectId(req.query.userId), status: 'pending' }
           ]
         };
 
-    const posts = await Post.find(filter)
-      .populate('author', 'name profilePic universityId _id')
-      .populate({
-        path: 'comments',
-        populate: { path: 'author', select: 'name profilePic' }
-      })
-      .sort('-createdAt')
-      .skip(skip)
-      .limit(limit)
-      .lean();
+    // Add search filter if provided
+    if (searchQuery) {
+      baseMatch = {
+        ...baseMatch,
+        $or: [
+          { content: new RegExp(searchQuery, 'i') },
+          { 'authorData.name': new RegExp(searchQuery, 'i') }
+        ]
+      };
+    }
 
+    const pipeline = [
+      { $match: baseMatch },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'author',
+          foreignField: '_id',
+          as: 'authorData'
+        }
+      },
+      { $unwind: '$authorData' }
+    ];
+
+    // Add year filter if provided
+    if (yearFilter) {
+      pipeline.push({
+        $match: {
+          'authorData.universityId': new RegExp(`^${yearFilter}`)
+        }
+      });
+    }
+
+    // Add pagination and sorting
+    pipeline.push(
+      { $sort: { createdAt: -1 } },
+      { $skip: skip },
+      { $limit: limit },
+      {
+        $lookup: {
+          from: 'comments',
+          localField: 'comments',
+          foreignField: '_id',
+          as: 'commentsData'
+        }
+      },
+      {
+        $project: {
+          content: 1,
+          type: 1,
+          status: 1,
+          image: 1,
+          likes: 1,
+          comments: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          author: {
+            _id: '$authorData._id',
+            name: '$authorData.name',
+            profilePic: '$authorData.profilePic',
+            universityId: '$authorData.universityId'
+          },
+          comments: {
+            $map: {
+              input: '$commentsData',
+              as: 'comment',
+              in: {
+                _id: '$$comment._id',
+                content: '$$comment.content',
+                author: {
+                  _id: '$$comment.author._id',
+                  name: '$$comment.author.name',
+                  profilePic: '$$comment.author.profilePic'
+                },
+                createdAt: '$$comment.createdAt'
+              }
+            }
+          }
+        }
+      }
+    );
+    const posts = await Post.aggregate(pipeline);
     res.status(200).json({
       success: true,
       count: posts.length,
       data: posts
     });
   } catch (err) {
+    console.error('Error in getAllPosts:', err);
     next(err);
   }
 };
