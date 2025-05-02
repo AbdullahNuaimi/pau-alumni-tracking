@@ -7,6 +7,8 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import './dashboard.css';
 
+import NotificationSender from '../../components/NotificationSender/NotificationSender';
+
 const Dashboard = () => {
   const { user } = useUser();
   const [metrics, setMetrics] = useState({
@@ -21,6 +23,8 @@ const Dashboard = () => {
   const [users, setUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
+  const [colleges, setColleges] = useState([]);
+
 
   const navigate = useNavigate();
 
@@ -35,7 +39,7 @@ const Dashboard = () => {
             headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
           })
         ]);
-
+  
         if (metricsResponse.data.success) {
           setMetrics({
             totalUsers: metricsResponse.data.data.totalUsers || 0,
@@ -46,8 +50,11 @@ const Dashboard = () => {
             employmentStats: metricsResponse.data.data.employmentStats || { employed: 0, unemployed: 0 },
             growthData: metricsResponse.data.data.growthData || []
           });
+          
+          // Extract colleges for notification sender
+          setColleges(Object.keys(metricsResponse.data.data.usersByCollege || {}));
         }
-
+  
         setUsers(Array.isArray(usersResponse.data?.data) ? usersResponse.data.data : []);
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
@@ -118,7 +125,7 @@ const Dashboard = () => {
           color="#FF8042"
         />
       </div>
-
+      <NotificationSender colleges={colleges} />
 
       <div className="charts-container">
         <ChartCard title="التوزيع الأكاديمي" icon={<FaUniversity />}>

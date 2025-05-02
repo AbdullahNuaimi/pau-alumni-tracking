@@ -78,6 +78,7 @@ const Community = () => {
         isFetchingRef.current = true;
 
         try {
+            console.log("hello from fetchPosts!")
             const userId = user?._id || JSON.parse(localStorage.getItem('user'))._id;
             const response = await axios.get('/api/v1/posts', {
                 headers: {

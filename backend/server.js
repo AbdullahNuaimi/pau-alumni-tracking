@@ -15,6 +15,7 @@ import { userRoutes } from './routes/userRoutes.js';
 import { articleRoutes } from './routes/articleRoutes.js';
 import metricsRoutes from './routes/metricsRoutes.js';
 import messageRoutes from './routes/messageRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
 
 dotenv.config({ path: './config/config.env' });
 
@@ -51,7 +52,7 @@ app.use('/api/v1/posts', commentRoutes);
 app.use('/api/v1/users', userRoutes);  
 app.use('/api/v1/articles', articleRoutes); 
 app.use('/api/v1/messages', messageRoutes); 
-
+app.use('/api/v1/notifications', notificationRoutes);
 
 
 const PORT = process.env.PORT || 5000;
