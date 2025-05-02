@@ -20,6 +20,7 @@ import Footer from './components/Footer/Footer.component';
 import NotFound from './pages/NotFound/NotFound.page';
 import MessagingLayout from './pages/MessagingLayout/MessagingLayout.page';
 import Conversation from './components/Conversation/Conversation.component';
+import Header from './components/Header/header';
 
 
 import { UserProvider } from './contexts/UserContext';
@@ -29,9 +30,17 @@ import 'react-toastify/dist/ReactToastify.css';
 const AppRoutes = () => {
   const location = useLocation();
 
+
   return (
     <>
-      {!['/', '/login', '/register'].includes(location.pathname) && <NavigationBar />}
+      {/* {!['/', '/login', '/register'].includes(location.pathname) && <Header />} */}
+      {!['/', '/login', '/register'].includes(location.pathname) &&
+        <>
+          <NavigationBar />
+          <Header />
+
+        </>
+      }
       <main className={`content ${['/', '/login', '/register'].includes(location.pathname) ? 'auth-page' : ''}`}>
         <Routes>
           <Route path="/login" element={<Login />} />

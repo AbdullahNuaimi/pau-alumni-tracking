@@ -1,21 +1,45 @@
 .messaging-container {
-    display: flex;
-    height: calc(100vh - 80px);
-    direction: rtl;
-    background: #f5f7fb;
-  }
-  
-  .messaging-sidebar {
-    width: 350px;
-    border-left: 1px solid #e1e1e1;
-    overflow-y: auto;
-    background: white;
-    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.05);
-  }
-  
-  .conversation-view {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    background: #f5f7fb;
-  }
+  margin-right: 20px;
+  display: flex;
+  height: calc(100vh - 80px);
+  direction: rtl;
+  background: #f8fafc;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.messaging-sidebar {
+  width: 380px;
+  border-left: 1px solid #e2e8f0;
+  overflow-y: auto;
+  background: white;
+  box-shadow: -4px 0 15px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+} 
+
+.conversation-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #f8fafc;
+  position: relative;
+}
+
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

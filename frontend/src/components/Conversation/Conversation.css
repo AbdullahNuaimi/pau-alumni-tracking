@@ -1,112 +1,141 @@
 .conversation-container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    background: white;
-    border-radius: 8px 0 0 0;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  }
-  
-  .conversation-header {
-    padding: 1rem;
-    border-bottom: 1px solid #e1e1e1;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    background: white;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-  
-  .conversation-header img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-  
-  .messages-container {
-    flex: 1;
-    padding: 1rem;
-    overflow-y: auto;
-    background: #f5f7fb;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .message {
-    max-width: 70%;
-    margin-bottom: 0.5rem;
-    padding: 0.8rem 1rem;
-    border-radius: 1rem;
-    position: relative;
-    word-break: break-word;
-  }
-  
-  .message.sent {
-    background: #3498db;
-    color: white;
-    margin-left: auto;
-    border-bottom-right-radius: 0;
-  }
-  
-  .message.received {
-    background: #ffffff;
-    margin-right: auto;
-    border-bottom-left-radius: 0;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-  
-  .message-time {
-    font-size: 0.7rem;
-    color: rgba(255, 255, 255, 0.8);
-    margin-top: 0.3rem;
-    text-align: left;
-  }
-  
-  .message.received .message-time {
-    color: #666;
-  }
-  
-  .message-input {
-    display: flex;
-    padding: 1rem;
-    border-top: 1px solid #e1e1e1;
-    background: white;
-    position: sticky;
-    bottom: 0;
-  }
-  
-  .message-input input {
-    flex: 1;
-    padding: 0.8rem 1rem;
-    border: 1px solid #ddd;
-    border-radius: 2rem;
-    outline: none;
-    transition: border 0.2s;
-  }
-  
-  .message-input input:focus {
-    border-color: #3498db;
-  }
-  
-  .message-input button {
-    background: #3498db;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    margin-right: 0.5rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s;
-  }
-  
-  .message-input button:hover {
-    background: #2980b9;
-  }
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: white;
+  border-radius: 12px 0 0 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+.conversation-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: white;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(5px);
+}
+
+.conversation-header img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e2e8f0;
+}
+
+.conversation-header h3 {
+  margin: 0;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.messages-container {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.message {
+  max-width: 75%;
+  margin-bottom: 0.5rem;
+  padding: 0.9rem 1.2rem;
+  border-radius: 1.25rem;
+  position: relative;
+  word-break: break-word;
+  line-height: 1.5;
+  font-size: 0.95rem;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.message.sent {
+  background: #3b82f6;
+  color: white;
+  margin-left: auto;
+  border-bottom-right-radius: 0.25rem;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+}
+
+.message.received {
+  background: white;
+  margin-right: auto;
+  border-bottom-left-radius: 0.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  color: #334155;
+  border: 1px solid #e2e8f0;
+}
+
+.message-time {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 0.4rem;
+  text-align: left;
+  font-weight: 300;
+}
+
+.message.received .message-time {
+  color: #94a3b8;
+}
+
+.message-input {
+  display: flex;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #f1f5f9;
+  background: white;
+  position: sticky;
+  bottom: 0;
+  gap: 0.75rem;
+}
+
+.message-input input {
+  flex: 1;
+  padding: 0.9rem 1.2rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 2rem;
+  outline: none;
+  transition: all 0.2s;
+  font-size: 0.95rem;
+  background: #f8fafc;
+}
+
+.message-input input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.message-input button {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.message-input button:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.message-input button:active {
+  transform: scale(0.98);
+}
