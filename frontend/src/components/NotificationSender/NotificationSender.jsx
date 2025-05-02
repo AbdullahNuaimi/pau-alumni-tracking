@@ -19,7 +19,7 @@ const NotificationSender = ({ colleges, onSend }) => {
 
     setIsSending(true);
     try {
-      const response = await axios.post('/api/v1/notifications', {
+       await axios.post('/api/v1/notifications', {
         content,
         link: link.trim() || undefined,
         targetType,
