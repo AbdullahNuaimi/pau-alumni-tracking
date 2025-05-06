@@ -49,29 +49,92 @@ export const getMetrics = async (req, res) => {
 
     let growthData = [];
     try {
-      const sixMonthsAgo = new Date();
-      sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+      const now = new Date();
+      const startOfCurrentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+      const sixMonthsAgo = new Date(startOfCurrentMonth);
+      sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5); // Last 6 months
 
-      const monthData = await User.aggregate([
+      // Get user growth data
+      const userGrowth = await User.aggregate([
         {
-          $match: { createdAt: { $gte: sixMonthsAgo } }
+          $match: {
+            createdAt: {
+              $gte: sixMonthsAgo,
+              $lte: now
+            }
+          }
         },
         {
           $group: {
-            _id: { $month: '$createdAt' },
-            users: { $sum: 1 },
-            posts: { $sum: { $size: { $ifNull: ['$posts', []] } } 
+            _id: {
+              year: { $year: '$createdAt' },
+              month: { $month: '$createdAt' }
+            },
+            users: { $sum: 1 }
           }
-        }},
-        { $sort: { '_id': 1 } }
+        }
       ]);
 
-      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      growthData = monthData.map(item => ({
-        month: monthNames[item._id - 1],
-        users: item.users,
-        posts: item.posts
-      }));
+      // Get post growth data separately
+      const postGrowth = await Post.aggregate([
+        {
+          $match: {
+            createdAt: {
+              $gte: sixMonthsAgo,
+              $lte: now
+            }
+          }
+        },
+        {
+          $group: {
+            _id: {
+              year: { $year: '$createdAt' },
+              month: { $month: '$createdAt' }
+            },
+            posts: { $sum: 1 }
+          }
+        }
+      ]);
+
+      const monthNames = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
+        'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+
+      // Create complete month range
+      const resultMap = new Map();
+      const currentDate = new Date(sixMonthsAgo);
+
+      while (currentDate <= now) {
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth() + 1;
+        const key = `${year}-${month}`;
+        resultMap.set(key, {
+          month: monthNames[month - 1],
+          year: year,
+          users: 0,
+          posts: 0
+        });
+        currentDate.setMonth(currentDate.getMonth() + 1);
+      }
+
+      // Merge user data
+      userGrowth.forEach(item => {
+        const key = `${item._id.year}-${item._id.month}`;
+        if (resultMap.has(key)) {
+          resultMap.get(key).users = item.users;
+        }
+      });
+
+      // Merge post data
+      postGrowth.forEach(item => {
+        const key = `${item._id.year}-${item._id.month}`;
+        if (resultMap.has(key)) {
+          resultMap.get(key).posts = item.posts;
+        }
+      });
+
+      growthData = Array.from(resultMap.values())
+        .sort((a, b) => a.year === b.year ? a.month - b.month : a.year - b.year);
+
     } catch (error) {
       console.error('Error in growth data aggregation:', error);
     }

@@ -1,8 +1,22 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useUser } from '../../contexts/UserContext';
-import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
-import { FaUsers, FaNewspaper, FaComment, FaChartLine, FaUniversity, FaBriefcase, FaCalendarAlt,FaFileAlt } from 'react-icons/fa';
+import {
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  LineChart,
+  Line,
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  BarChart,
+  Bar
+} from 'recharts';
+import { FaUsers, FaNewspaper, FaComment, FaChartLine, FaUniversity, FaBriefcase, FaCalendarAlt, FaFileAlt } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import './dashboard.css';
@@ -39,7 +53,7 @@ const Dashboard = () => {
             headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
           })
         ]);
-  
+
         if (metricsResponse.data.success) {
           setMetrics({
             totalUsers: metricsResponse.data.data.totalUsers || 0,
@@ -50,11 +64,11 @@ const Dashboard = () => {
             employmentStats: metricsResponse.data.data.employmentStats || { employed: 0, unemployed: 0 },
             growthData: metricsResponse.data.data.growthData || []
           });
-          
+
           // Extract colleges for notification sender
           setColleges(Object.keys(metricsResponse.data.data.usersByCollege || {}));
         }
-  
+
         setUsers(Array.isArray(usersResponse.data?.data) ? usersResponse.data.data : []);
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
@@ -68,7 +82,7 @@ const Dashboard = () => {
     }
   }, [user]);
 
-  const filteredUsers = users.filter(user => 
+  const filteredUsers = users.filter(user =>
     user?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     user?.email?.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -88,40 +102,40 @@ const Dashboard = () => {
     { name: 'موظفين', value: metrics.employmentStats.employed },
     { name: 'غير موظفين', value: metrics.employmentStats.unemployed }
   ];
-
+  const sortedCollegeData = [...collegeData].sort((a, b) => b.value - a.value);
   return (
     <div className="dashboard-container">
       <h1 className="dashboard-title"><FaChartLine /> لوحة التحكم</h1>
 
       <div className="stats-grid">
-        <StatCard 
-          icon={<FaUsers />} 
-          title="إجمالي المستخدمين" 
-          value={metrics.totalUsers} 
+        <StatCard
+          icon={<FaUsers />}
+          title="إجمالي المستخدمين"
+          value={metrics.totalUsers}
           color="#0088FE"
         />
-        <StatCard 
-          icon={<FaNewspaper />} 
-          title="المقالات المنشورة" 
-          value={metrics.totalArticles} 
+        <StatCard
+          icon={<FaNewspaper />}
+          title="المقالات المنشورة"
+          value={metrics.totalArticles}
           color="#00C49F"
         />
-        <StatCard 
-          icon={<FaFileAlt />} 
-          title="المنشورات" 
-          value={metrics.totalPosts} 
+        <StatCard
+          icon={<FaFileAlt />}
+          title="المنشورات"
+          value={metrics.totalPosts}
           color="#ac0075"
         />
-        <StatCard 
-          icon={<FaComment />} 
-          title="التعليقات" 
-          value={metrics.totalComments} 
+        <StatCard
+          icon={<FaComment />}
+          title="التعليقات"
+          value={metrics.totalComments}
           color="#FFBB28"
         />
-        <StatCard 
-          icon={<FaBriefcase />} 
-          title="الموظفين" 
-          value={metrics.employmentStats.employed} 
+        <StatCard
+          icon={<FaBriefcase />}
+          title="الموظفين"
+          value={metrics.employmentStats.employed}
           color="#FF8042"
         />
       </div>
@@ -129,26 +143,55 @@ const Dashboard = () => {
 
       <div className="charts-container">
         <ChartCard title="التوزيع الأكاديمي" icon={<FaUniversity />}>
-          {collegeData.length > 0 ? (
+          {sortedCollegeData.length > 0 ? (
             <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={collegeData}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={80}
-                  fill="#8884d8"
+              <BarChart
+                data={collegeData}
+                layout="horizontal" 
+                margin={{ top: 20, right: 30, left: 40, bottom: 20 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="name"
+                  tick={{ fontSize: 12 }}
+                  interval={0} 
+                  tickFormatter={(value) => 
+                    value.length > 10 ? 
+                      value.substring(0, 10) + '...' : 
+                      value
+                  }
+                  width={100}
+                />
+                <YAxis
                   dataKey="value"
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                >
-                  {collegeData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip formatter={(value) => [value, 'عدد المستخدمين']} />
+                  label={{
+                    value: 'عدد الطلاب',
+                    angle: -90,
+                    position: 'insideLeft'
+                  }}
+                />
+                <Tooltip
+                  formatter={(value) => [value, 'عدد الطلاب']}
+                  labelFormatter={(label) => `الكلية: ${label}`}
+                />
                 <Legend />
-              </PieChart>
+                <Bar
+                  dataKey="value"
+                  name="عدد الطلاب"
+                  fill="#8884d8"
+                  barSize={30}
+                  radius={[4, 4, 0, 0]} 
+                >
+                  {sortedCollegeData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Bar>
+              </BarChart>
             </ResponsiveContainer>
+
           ) : (
             <p className="no-data">لا توجد بيانات متاحة</p>
           )}
@@ -185,16 +228,16 @@ const Dashboard = () => {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Line 
-                  type="monotone" 
-                  dataKey="users" 
-                  stroke="#8884d8" 
+                <Line
+                  type="monotone"
+                  dataKey="users"
+                  stroke="#8884d8"
                   name="مستخدمين جدد"
                 />
-                <Line 
-                  type="monotone" 
-                  dataKey="posts" 
-                  stroke="#82ca9d" 
+                <Line
+                  type="monotone"
+                  dataKey="posts"
+                  stroke="#82ca9d"
                   name="منشورات جديدة"
                 />
               </LineChart>
@@ -215,7 +258,7 @@ const Dashboard = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
           className="search-input"
         />
-        
+
         <div className="users-table-container">
           <div className="users-table-header">
             <div>الاسم</div>
@@ -226,7 +269,7 @@ const Dashboard = () => {
           <div className="users-table-body">
             {filteredUsers.length > 0 ? (
               filteredUsers.map(user => (
-                <div key={user._id} className="users-table-row" onClick={()=>{navigate(`/ViewProfile/${user._id}`)}}>
+                <div key={user._id} className="users-table-row" onClick={() => { navigate(`/ViewProfile/${user._id}`) }}>
                   <div>{user.name || 'غير محدد'}</div>
                   <div>{user.email}</div>
                   <div>{user.education?.[0]?.college || 'غير محدد'}</div>
