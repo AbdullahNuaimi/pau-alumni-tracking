@@ -3,6 +3,7 @@ import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import './CertificateGenerator.css';
 import universityStamp from '../../assets/university-stamp.PNG';
+import universityLogo from '../../assets/navigation_bar_logo.png';
 
 const CertificateGenerator = () => {
   const [formData, setFormData] = useState({
@@ -111,6 +112,7 @@ const CertificateGenerator = () => {
           <div className="certificate-border">
             <div className="certificate-header">
               <h1>جامعة فلسطين الأهلية</h1>
+              <img src={universityLogo} alt="" />
               <h2>Palestine Ahliya University</h2>
               <div className="header-decoration"></div>
             </div>
