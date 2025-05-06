@@ -52,9 +52,9 @@ export const getMetrics = async (req, res) => {
       const now = new Date();
       const startOfCurrentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
       const sixMonthsAgo = new Date(startOfCurrentMonth);
-      sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5); // Last 6 months
+      sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5); 
 
-      // Get user growth data
+
       const userGrowth = await User.aggregate([
         {
           $match: {
@@ -75,7 +75,6 @@ export const getMetrics = async (req, res) => {
         }
       ]);
 
-      // Get post growth data separately
       const postGrowth = await Post.aggregate([
         {
           $match: {
@@ -99,7 +98,6 @@ export const getMetrics = async (req, res) => {
       const monthNames = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
         'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
 
-      // Create complete month range
       const resultMap = new Map();
       const currentDate = new Date(sixMonthsAgo);
 
@@ -116,7 +114,6 @@ export const getMetrics = async (req, res) => {
         currentDate.setMonth(currentDate.getMonth() + 1);
       }
 
-      // Merge user data
       userGrowth.forEach(item => {
         const key = `${item._id.year}-${item._id.month}`;
         if (resultMap.has(key)) {
@@ -124,7 +121,6 @@ export const getMetrics = async (req, res) => {
         }
       });
 
-      // Merge post data
       postGrowth.forEach(item => {
         const key = `${item._id.year}-${item._id.month}`;
         if (resultMap.has(key)) {
