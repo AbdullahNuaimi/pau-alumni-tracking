@@ -17,9 +17,15 @@ const NotificationSender = ({ colleges, onSend }) => {
       return;
     }
 
+    
+    if (link.trim() && !/^https?:\/\//i.test(link.trim())) {
+      toast.error('الرابط يجب أن يبدأ بـ http:// أو https://');
+      return;
+    }
+
     setIsSending(true);
     try {
-       await axios.post('/api/v1/notifications', {
+      await axios.post('/api/v1/notifications', {
         content,
         link: link.trim() || undefined,
         targetType,
