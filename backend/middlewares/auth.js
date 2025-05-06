@@ -4,7 +4,6 @@ import AppError from '../utils/appError.js';
 
 
 export const protect = async (req, res, next) => {
-  console.log("hello from protect")
   try {
 
     let token;

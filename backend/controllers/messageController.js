@@ -3,10 +3,10 @@ import User from '../models/User.js';
 
 // Send a message
 export const sendMessage = async (req, res) => {
-    
+
   try {
     const { recipient, content } = req.body;
-    
+
     const message = await Message.create({
       sender: req.user.id,
       recipient,
@@ -21,7 +21,7 @@ export const sendMessage = async (req, res) => {
 
 // Get all conversations for current user
 export const getConversations = async (req, res) => {
-    console.log("hello from getConversations");
+  console.log("hello from getConversations");
   try {
     const conversations = await Message.aggregate([
       {
@@ -45,10 +45,12 @@ export const getConversations = async (req, res) => {
           unreadCount: {
             $sum: {
               $cond: [
-                { $and: [
-                  { $eq: ['$recipient', req.user._id] },
-                  { $eq: ['$read', false] }
-                ]},
+                {
+                  $and: [
+                    { $eq: ['$recipient', req.user._id] },
+                    { $eq: ['$read', false] }
+                  ]
+                },
                 1,
                 0
               ]
@@ -76,7 +78,6 @@ export const getConversations = async (req, res) => {
 
 // Get messages between current user and another user
 export const getMessages = async (req, res) => {
-    console.log("hello from getMessages");
   try {
     const messages = await Message.find({
       $or: [
@@ -84,15 +85,15 @@ export const getMessages = async (req, res) => {
         { sender: req.params.userId, recipient: req.user._id }
       ]
     })
-    .sort('createdAt')
-    .populate('sender', 'name profilePic');
+      .sort('createdAt')
+      .populate('sender', 'name profilePic');
 
     // Mark messages as read
     await Message.updateMany(
-      { 
-        sender: req.params.userId, 
+      {
+        sender: req.params.userId,
         recipient: req.user._id,
-        read: false 
+        read: false
       },
       { $set: { read: true } }
     );
@@ -105,15 +106,15 @@ export const getMessages = async (req, res) => {
 
 // Search messages and users
 export const searchMessages = async (req, res) => {
-    console.log("hello from searchMessages");
+  console.log("hello from searchMessages");
   try {
     const { query } = req.query;
-    
+
     // Search users
     const users = await User.find({
       $or: [
-        { name: { $regex: query, $options: 'i' }},
-        { email: { $regex: query, $options: 'i' }}
+        { name: { $regex: query, $options: 'i' } },
+        { email: { $regex: query, $options: 'i' } }
       ],
       _id: { $ne: req.user._id }
     }).select('name email profilePic');
@@ -126,10 +127,39 @@ export const searchMessages = async (req, res) => {
       ],
       content: { $regex: query, $options: 'i' }
     })
-    .populate('sender recipient', 'name profilePic');
+      .populate('sender recipient', 'name profilePic');
 
     res.json({ users, messages });
   } catch (error) {
     res.status(500).json({ message: 'Search failed' });
+  }
+};
+
+// get messages count
+export const getUnreadCount = async (req, res) => {
+  try {
+    if (!req.user?._id) {
+      return res.status(400).json({
+        success: false,
+        message: 'User ID not available'
+      });
+    }
+
+    const count = await Message.countDocuments({
+      recipient: req.user._id,
+      read: false
+    });
+
+    res.status(200).json({
+      success: true,
+      count
+    });
+  } catch (error) {
+    console.error('Error in getUnreadCount:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get unread count',
+      error: error.message
+    });
   }
 };
