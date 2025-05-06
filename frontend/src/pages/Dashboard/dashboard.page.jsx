@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { saveAs } from 'file-saver';
 import axios from 'axios';
 import { useUser } from '../../contexts/UserContext';
 import {
@@ -16,7 +17,7 @@ import {
   BarChart,
   Bar
 } from 'recharts';
-import { FaUsers, FaNewspaper, FaComment, FaChartLine, FaUniversity, FaBriefcase, FaCalendarAlt, FaFileAlt } from 'react-icons/fa';
+import { FaUsers, FaNewspaper, FaComment, FaChartLine, FaUniversity, FaBriefcase, FaCalendarAlt, FaFileAlt, FaDownload } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import './dashboard.css';
@@ -38,7 +39,10 @@ const Dashboard = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [colleges, setColleges] = useState([]);
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
 
+  const [selectedYear, setSelectedYear] = useState('');
+  const [selectedCollege, setSelectedCollege] = useState('');
 
   const navigate = useNavigate();
 
@@ -64,8 +68,6 @@ const Dashboard = () => {
             employmentStats: metricsResponse.data.data.employmentStats || { employed: 0, unemployed: 0 },
             growthData: metricsResponse.data.data.growthData || []
           });
-
-          // Extract colleges for notification sender
           setColleges(Object.keys(metricsResponse.data.data.usersByCollege || {}));
         }
 
@@ -82,10 +84,101 @@ const Dashboard = () => {
     }
   }, [user]);
 
-  const filteredUsers = users.filter(user =>
-    user?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user?.email?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+
+  const enhancedUsers = useMemo(() => {
+    return users.map(user => ({
+      ...user,
+      graduationYear: user.universityId ? `20${user.universityId.substring(0, 2)}` : 'N/A'
+    }));
+  }, [users]);
+
+
+  const filteredUsers = useMemo(() => {
+    return enhancedUsers.filter(user => {
+      const query = searchQuery.toLowerCase();
+      const matchesSearch = (
+        user?.name?.toLowerCase().includes(query) ||
+        user?.email?.toLowerCase().includes(query) ||
+        user?.education?.[0]?.college?.toLowerCase().includes(query) ||
+        user?.graduationYear?.toString().includes(searchQuery)
+      );
+
+      const matchesYear = selectedYear ? user.graduationYear === selectedYear : true;
+      const matchesCollege = selectedCollege ?
+        user.education?.[0]?.college === selectedCollege : true;
+
+      return matchesSearch && matchesYear && matchesCollege;
+    });
+  }, [enhancedUsers, searchQuery, selectedYear, selectedCollege]);
+
+  const availableYears = [...new Set(enhancedUsers.map(user => user.graduationYear))].sort();
+  const availableColleges = [...new Set(
+    enhancedUsers.flatMap(user => user.education?.map(edu => edu.college)).filter(Boolean)
+  )].sort();
+
+  const sortedUsers = useMemo(() => {
+    let sortableUsers = [...filteredUsers];
+    if (sortConfig.key) {
+      sortableUsers.sort((a, b) => {
+
+        const aValue = sortConfig.key.includes('.') ?
+          sortConfig.key.split('.').reduce((o, i) => o?.[i], a) :
+          a[sortConfig.key];
+
+        const bValue = sortConfig.key.includes('.') ?
+          sortConfig.key.split('.').reduce((o, i) => o?.[i], b) :
+          b[sortConfig.key];
+
+        if (sortConfig.key === 'career') {
+          const aLength = a.career?.length || 0;
+          const bLength = b.career?.length || 0;
+          return sortConfig.direction === 'ascending' ? aLength - bLength : bLength - aLength;
+        }
+
+        if (aValue < bValue) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (aValue > bValue) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableUsers;
+  }, [filteredUsers, sortConfig]);
+
+  const requestSort = (key) => {
+    let direction = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const exportToCSV = () => {
+    const headers = ['الاسم', 'البريد الإلكتروني', 'الكلية', 'الحالة الوظيفية', 'سنة التخرج'];
+    const data = sortedUsers.map(user => [
+      `"${user.name || 'غير محدد'}"`,
+      `"${user.email}"`,
+      `"${user.education?.[0]?.college || 'غير محدد'}"`,
+      `"${user.career?.length > 0 ? 'موظف' : 'غير موظف'}"`,
+      `"${user.graduationYear}"`
+    ]);
+
+    const csvContent = [
+      headers.join(','),
+      ...data.map(row => row.join(','))
+    ].join('\n');
+
+    const currentDate = new Date();
+    const formattedDate = currentDate.toISOString()
+      .replace(/T/, '_')
+      .replace(/\..+/, '')
+      .replace(/:/g, '-');
+
+    const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+    saveAs(blob, `users_${formattedDate}.csv`);
+  };
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D'];
 
@@ -103,6 +196,7 @@ const Dashboard = () => {
     { name: 'غير موظفين', value: metrics.employmentStats.unemployed }
   ];
   const sortedCollegeData = [...collegeData].sort((a, b) => b.value - a.value);
+
   return (
     <div className="dashboard-container">
       <h1 className="dashboard-title"><FaChartLine /> لوحة التحكم</h1>
@@ -147,17 +241,17 @@ const Dashboard = () => {
             <ResponsiveContainer width="100%" height={300}>
               <BarChart
                 data={collegeData}
-                layout="horizontal" 
+                layout="horizontal"
                 margin={{ top: 20, right: 30, left: 40, bottom: 20 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis
                   dataKey="name"
                   tick={{ fontSize: 12 }}
-                  interval={0} 
-                  tickFormatter={(value) => 
-                    value.length > 10 ? 
-                      value.substring(0, 10) + '...' : 
+                  interval={0}
+                  tickFormatter={(value) =>
+                    value.length > 10 ?
+                      value.substring(0, 10) + '...' :
                       value
                   }
                   width={100}
@@ -180,7 +274,7 @@ const Dashboard = () => {
                   name="عدد الطلاب"
                   fill="#8884d8"
                   barSize={30}
-                  radius={[4, 4, 0, 0]} 
+                  radius={[4, 4, 0, 0]}
                 >
                   {sortedCollegeData.map((entry, index) => (
                     <Cell
@@ -205,12 +299,12 @@ const Dashboard = () => {
                 cx="50%"
                 cy="50%"
                 outerRadius={80}
-                fill="#8884d8"
+                fill="#FFFFFF"
                 dataKey="value"
                 label
               >
                 {employmentData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index + 2 % COLORS.length]} />
+                  <Cell key={`cell-${index}`} fill={COLORS[index + 4 % COLORS.length]} />
                 ))}
               </Pie>
               <Tooltip formatter={(value) => [value, 'عدد المستخدمين']} />
@@ -250,30 +344,115 @@ const Dashboard = () => {
 
 
       <div className="users-section">
-        <h2>قائمة المستخدمين ({filteredUsers.length})</h2>
-        <input
-          type="text"
-          placeholder="ابحث عن مستخدم..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="search-input"
-        />
+        <div className="users-section-header">
+          <h2>قائمة المستخدمين ({sortedUsers.length})</h2>
+          <button onClick={exportToCSV} className="btn-download">
+            <FaDownload /> تصدير إلى CSV
+          </button>
+        </div>
+
+        <div className="filters-container">
+          <div className="filter-group">
+            <label htmlFor="year-filter">سنة التخرج:</label>
+            <select
+              id="year-filter"
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+            >
+              <option value="">الكل</option>
+              {availableYears.map(year => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="filter-group">
+            <label htmlFor="college-filter">الكلية:</label>
+            <select
+              id="college-filter"
+              value={selectedCollege}
+              onChange={(e) => setSelectedCollege(e.target.value)}
+            >
+              <option value="">الكل</option>
+              {availableColleges.map(college => (
+                <option key={college} value={college}>{college}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="filter-group">
+            <input
+              type="text"
+              placeholder="ابحث عن مستخدم..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="search-input"
+            />
+          </div>
+        </div>
 
         <div className="users-table-container">
           <div className="users-table-header">
-            <div>الاسم</div>
-            <div>البريد الإلكتروني</div>
-            <div>الكلية</div>
-            <div>الحالة الوظيفية</div>
+            <div
+              onClick={() => requestSort('name')}
+              className={sortConfig.key === 'name' ? 'active-sort' : ''}
+            >
+              الاسم
+              {sortConfig.key === 'name' && (
+                sortConfig.direction === 'ascending' ? ' ↑' : ' ↓'
+              )}
+            </div>
+            <div
+              onClick={() => requestSort('email')}
+              className={sortConfig.key === 'email' ? 'active-sort' : ''}
+            >
+              البريد الإلكتروني
+              {sortConfig.key === 'email' && (
+                sortConfig.direction === 'ascending' ? ' ↑' : ' ↓'
+              )}
+            </div>
+            <div
+              onClick={() => requestSort('education.0.college')}
+              className={sortConfig.key === 'education.0.college' ? 'active-sort' : ''}
+            >
+              الكلية
+              {sortConfig.key === 'education.0.college' && (
+                sortConfig.direction === 'ascending' ? ' ↑' : ' ↓'
+              )}
+            </div>
+            <div
+              onClick={() => requestSort('career')}
+              className={sortConfig.key === 'career' ? 'active-sort' : ''}
+            >
+              الحالة الوظيفية
+              {sortConfig.key === 'career' && (
+                sortConfig.direction === 'ascending' ? ' ↑' : ' ↓'
+              )}
+            </div>
+            <div
+              onClick={() => requestSort('graduationYear')}
+              className={sortConfig.key === 'graduationYear' ? 'active-sort' : ''}
+            >
+              سنة التخرج
+              {sortConfig.key === 'graduationYear' && (
+                sortConfig.direction === 'ascending' ? ' ↑' : ' ↓'
+              )}
+            </div>
           </div>
+
           <div className="users-table-body">
-            {filteredUsers.length > 0 ? (
-              filteredUsers.map(user => (
-                <div key={user._id} className="users-table-row" onClick={() => { navigate(`/ViewProfile/${user._id}`) }}>
+            {sortedUsers.length > 0 ? (
+              sortedUsers.map(user => (
+                <div
+                  key={user._id}
+                  className="users-table-row"
+                  onClick={() => navigate(`/ViewProfile/${user._id}`)}
+                >
                   <div>{user.name || 'غير محدد'}</div>
                   <div>{user.email}</div>
                   <div>{user.education?.[0]?.college || 'غير محدد'}</div>
                   <div>{user.career?.length > 0 ? 'موظف' : 'غير موظف'}</div>
+                  <div>{user.graduationYear}</div>
                 </div>
               ))
             ) : (
