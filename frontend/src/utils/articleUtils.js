@@ -1,12 +1,13 @@
 export const getCategoryName = (cat) => {
-    switch(cat) {
-      case 'news': return 'أخبار';
-      case 'events': return 'أحداث';
-      case 'announcements': return 'إعلانات';
-      case 'photos': return 'صور';
-      default: return cat;
-    }
-  };
+  switch(cat) {
+    case 'news': return 'أخبار';
+    case 'events': return 'أحداث';
+    case 'announcements': return 'إعلانات';
+    case 'photos': return 'صور';
+    case 'mou': return 'مذكرات تفاهم';
+    default: return cat;
+  }
+};
 
   export const getCategoryColor = (cat) => {
     const colors = {

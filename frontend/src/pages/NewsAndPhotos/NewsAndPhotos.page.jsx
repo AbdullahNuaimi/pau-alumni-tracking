@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 
 import { getCategoryName } from '../../utils/articleUtils';
 
@@ -10,7 +10,13 @@ import './NewsAndPhotos.css';
 const NewsAndPhotos = () => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeCategory, setActiveCategory] = useState('all');
+  const { category } = useParams(); 
+  const navigate = useNavigate();
+  const [activeCategory, setActiveCategory] = useState(category || 'all');
+
+  useEffect(() => {
+    setActiveCategory(category || 'all');
+  }, [category]);
 
   useEffect(() => {
     const fetchArticles = async () => {
@@ -32,6 +38,12 @@ const NewsAndPhotos = () => {
     fetchArticles();
   }, [activeCategory]);
 
+  const handleCategoryChange = (cat) => {
+    setActiveCategory(cat);
+    
+    navigate(cat === 'all' ? '/news' : `/news/${cat}`, { replace: true });
+  };
+
   if (loading) {
     return <div className="loading">جاري التحميل...</div>;
   }
@@ -39,19 +51,19 @@ const NewsAndPhotos = () => {
   return (
     <div className="news-photos-container">
       <h1>أخبار وصور</h1>
-      
+
       <div className="categories-filter">
-        <button 
+        <button
           className={activeCategory === 'all' ? 'active' : ''}
-          onClick={() => setActiveCategory('all')}
+          onClick={() => handleCategoryChange('all')}
         >
           الكل
         </button>
-        {['news', 'events', 'announcements', 'photos'].map(cat => (
+        {['news', 'events', 'announcements', 'photos', 'mou'].map(cat => (
           <button
             key={cat}
             className={activeCategory === cat ? 'active' : ''}
-            onClick={() => setActiveCategory(cat)}
+            onClick={() => handleCategoryChange(cat)}
           >
             {getCategoryName(cat)}
           </button>

@@ -30,7 +30,7 @@ const articleSchema = new mongoose.Schema({
   categories: [{
     type: String,
     enum: {
-      values: ['news', 'events', 'announcements', 'photos'],
+      values: ['news', 'events', 'announcements', 'photos', 'mou'],
       message: 'Invalid category'
     }
   }],
@@ -51,8 +51,7 @@ const articleSchema = new mongoose.Schema({
   toObject: { virtuals: true }
 });
 
-// Add any necessary virtuals or methods here
-// Example virtual for formatted published date
+
 articleSchema.virtual('formattedPublishedAt').get(function() {
   return this.publishedAt?.toLocaleDateString('ar-EG') || 'Not published';
 });

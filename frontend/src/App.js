@@ -55,6 +55,7 @@ const AppRoutes = () => {
           <Route path="/community/jobs" element={<Guard allowedRoles={['admin', 'user']}><Community jobs /></Guard>} />
           <Route path="/community/success-stories" element={<Guard allowedRoles={['admin', 'user']}><Community successStories /></Guard>} />
           <Route path="/news" element={<Guard allowedRoles={['admin', 'user']}><NewsAndPhotos /></Guard>} />
+          <Route path="/news/:category" element={<NewsAndPhotos />} />
           <Route path="/articles/:id" element={<Guard allowedRoles={['admin', 'user']}><ArticleDetail /></Guard>} />
           <Route path="/admin/articles/new" element={<Guard allowedRoles={['admin']}><AdminArticleEditor /></Guard>} />
           <Route path="/admin/articles/edit/:id" element={<Guard allowedRoles={['admin']}><AdminArticleEditor /></Guard>} />

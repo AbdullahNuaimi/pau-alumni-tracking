@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import './adminArticlesList.css';
+import { getCategoryName } from '../../utils/articleUtils';
 
 const AdminArticlesList = () => {
   const [articles, setArticles] = useState([]);
@@ -53,15 +54,6 @@ const AdminArticlesList = () => {
     }
   };
 
-  const getCategoryName = (category) => {
-    const categoriesMap = {
-      'news': 'أخبار',
-      'events': 'أحداث',
-      'announcements': 'إعلانات',
-      'photos': 'صور'
-    };
-    return categoriesMap[category] || category;
-  };
 
   if (loading) return <div className="loading">جاري تحميل المقالات...</div>;
 

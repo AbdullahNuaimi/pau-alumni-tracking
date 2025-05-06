@@ -16,7 +16,8 @@ import {
     FaNewspaper,
     FaImage,
     FaCertificate,
-    FaTachometerAlt
+    FaTachometerAlt,
+    FaHandshake
 } from 'react-icons/fa';
 import "./navigationBar.css";
 import logo from "../../assets/navigation_bar_logo.png";
@@ -70,6 +71,7 @@ const NavigationBar = () => {
                     )}
                     <li><button onClick={() => { navigate("/community"); setIsOpen(false); }}><FaComments /> المنتدى</button></li>
                     <li><button onClick={() => { navigate("/news"); setIsOpen(false); }}><FaNewspaper /> أخبار وصور</button></li>
+                    <li><button onClick={() => { navigate("/news/mou"); setIsOpen(false); }}><FaHandshake /> مذكرات تفاهم</button></li>
                     <li><button onClick={() => { navigate("/community/jobs"); setIsOpen(false); }}><FaBriefcase /> وظائف شاغرة</button></li>
                     <li><button onClick={() => { navigate("/GraduationBook"); setIsOpen(false); }}><FaBook /> طلب كتاب التخرج</button></li>
                     <li><button onClick={() => { navigate("/community/success-stories"); setIsOpen(false); }}><FaStar /> قصص نجاح</button></li>

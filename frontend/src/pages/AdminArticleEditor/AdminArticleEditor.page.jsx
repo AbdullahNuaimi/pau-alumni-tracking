@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
+import { getCategoryName } from '../../utils/articleUtils';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './AdminArticleEditor.css';
@@ -9,7 +10,7 @@ import './AdminArticleEditor.css';
 const AdminArticleEditor = () => {
   const { id } = useParams();
   const isEditMode = Boolean(id);
-  
+
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [excerpt, setExcerpt] = useState('');
@@ -22,7 +23,7 @@ const AdminArticleEditor = () => {
   const fileInputRef = useRef();
   const navigate = useNavigate();
 
-  // Fetch article data if in edit mode
+
   useEffect(() => {
     if (!isEditMode) return;
 
@@ -30,7 +31,7 @@ const AdminArticleEditor = () => {
       try {
         const res = await axios.get(`/api/v1/articles/${id}`);
         const article = res.data.data;
-        
+
         setTitle(article.title);
         setContent(article.content);
         setExcerpt(article.excerpt || '');
@@ -53,14 +54,14 @@ const AdminArticleEditor = () => {
   const handleImageUpload = async (e) => {
     const files = Array.from(e.target.files);
     const formData = new FormData();
-    
+
     files.forEach(file => {
-      formData.append('images', file); 
+      formData.append('images', file);
     });
-  
+
     try {
       const res = await axios.post(
-        'http://localhost:5000/api/v1/articles/upload', 
+        'http://localhost:5000/api/v1/articles/upload',
         formData,
         {
           headers: {
@@ -69,9 +70,9 @@ const AdminArticleEditor = () => {
           }
         }
       );
-  
+
       if (files.length === 1) {
-        setFeaturedImage(res.data.files[0].url); 
+        setFeaturedImage(res.data.files[0].url);
       } else {
         setImages(prev => [...prev, ...res.data.files.map(f => f.url)]);
       }
@@ -115,7 +116,7 @@ const AdminArticleEditor = () => {
         });
         toast.success('تم إنشاء المقال بنجاح');
       }
-      
+
       navigate('/admin/articles');
     } catch (err) {
       console.error(err);
@@ -132,7 +133,7 @@ const AdminArticleEditor = () => {
   return (
     <div className="article-editor-container">
       <h1>{isEditMode ? 'تعديل المقال' : 'إنشاء مقال جديد'}</h1>
-      
+
       <div className="editor-section">
         <label>عنوان المقال</label>
         <input
@@ -199,14 +200,14 @@ const AdminArticleEditor = () => {
       <div className="editor-section">
         <label>التصنيفات</label>
         <div className="categories-select">
-          {['news', 'events', 'announcements', 'photos'].map(cat => (
+          {['news', 'events', 'announcements', 'photos', 'mou'].map(cat => (
             <label key={cat}>
               <input
                 type="checkbox"
                 checked={categories.includes(cat)}
-                onChange={() => setCategories(prev => 
-                  prev.includes(cat) 
-                    ? prev.filter(c => c !== cat) 
+                onChange={() => setCategories(prev =>
+                  prev.includes(cat)
+                    ? prev.filter(c => c !== cat)
                     : [...prev, cat]
                 )}
               />
@@ -261,14 +262,5 @@ const quillFormats = [
   "direction"
 ];
 
-const getCategoryName = (cat) => {
-  switch(cat) {
-    case 'news': return 'أخبار';
-    case 'events': return 'أحداث';
-    case 'announcements': return 'إعلانات';
-    case 'photos': return 'صور';
-    default: return cat;
-  }
-};
 
 export default AdminArticleEditor;
