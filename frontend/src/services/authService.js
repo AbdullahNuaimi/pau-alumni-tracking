@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { setAuthToken } from './api';
 
-const API_URL = '/api/v1/auth';
+const API_URL = 'https://pau-alumni-tracking-production.up.railway.app:8080/api/v1/auth';
 
 // Register User
 export const register = async (userData) => {
