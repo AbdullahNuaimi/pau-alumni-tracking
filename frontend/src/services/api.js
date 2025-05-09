@@ -1,9 +1,13 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://pau-alumni-tracking-production.up.railway.app:8080';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://pau-alumni-tracking-production.up.railway.app:8080';
 console.log('API Base URL:', API_BASE_URL); // Debug log
-// axios.defaults.baseURL = 'https://pau-alumni-tracking-production.up.railway.app:8080';
-axios.defaults.baseURL = API_BASE_URL;
+
+if (!API_BASE_URL.includes('localhost')) {
+  axios.defaults.baseURL = API_BASE_URL;
+} else {
+  console.error('Invalid API URL detected:', API_BASE_URL);
+}
 
 // Set auth token for requests
 export const setAuthToken = (token) => {
