@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-axios.defaults.baseURL = 'https://dashing-tail-production.up.railway.app';
+axios.defaults.baseURL = 'https://pau-alumni-tracking-production.up.railway.app:8080';
 
 // Set auth token for requests
 export const setAuthToken = (token) => {
