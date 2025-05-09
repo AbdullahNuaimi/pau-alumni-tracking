@@ -63,6 +63,7 @@ export const getAllPosts = async (req, res, next) => {
     const skip = (page - 1) * limit;
     const yearFilter = req.query.year;
     const searchQuery = req.query.search;
+    const typeFilter = req.query.type;
 
     // Base match for permissions
     let baseMatch = req.headers.role === 'admin' 
@@ -73,6 +74,14 @@ export const getAllPosts = async (req, res, next) => {
             { author: new mongoose.Types.ObjectId(req.query.userId), status: 'pending' }
           ]
         };
+
+    // Add type filter if provided
+    if (typeFilter && typeFilter !== 'all') {
+      baseMatch = {
+        ...baseMatch,
+        type: typeFilter
+      };
+    }
 
     // Add search filter if provided
     if (searchQuery) {

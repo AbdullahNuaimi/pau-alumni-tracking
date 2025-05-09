@@ -78,7 +78,6 @@ const Community = () => {
         isFetchingRef.current = true;
 
         try {
-            console.log("hello from fetchPosts!")
             const userId = user?._id || JSON.parse(localStorage.getItem('user'))._id;
             const response = await axios.get('/api/v1/posts', {
                 headers: {
@@ -90,6 +89,7 @@ const Community = () => {
                     page: pageNum,
                     limit: 4,
                     year: selectedYear !== 'all' ? selectedYear : undefined,
+                    type: activeFilter !== 'all' ? activeFilter : undefined,
                     search: searchQuery || undefined,
                     _: Date.now()
                 }
@@ -124,7 +124,7 @@ const Community = () => {
                 setIsFetchingMore(false);
             }
         }
-    }, [user, applyFilter, selectedYear, searchQuery]);
+    }, [user, applyFilter, selectedYear, searchQuery, activeFilter]);
 
 
     useEffect(() => {
@@ -279,7 +279,6 @@ const Community = () => {
                     { id: 'announcement', label: 'إعلانات' },
                     { id: 'job', label: 'وظائف' },
                     { id: 'success', label: 'قصص نجاح' },
-                    ...(user?.role === 'admin' ? [{ id: 'pending', label: 'قيد المراجعة' }] : [])
                 ].map(filter => (
                     <button
                         key={filter.id}
