@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-
-axios.defaults.baseURL = 'http://localhost:5000';
+axios.defaults.baseURL = 'https://dashing-tail-production.up.railway.app';
 
 // Set auth token for requests
 export const setAuthToken = (token) => {
@@ -13,7 +12,6 @@ export const setAuthToken = (token) => {
     localStorage.removeItem('token');
   }
 };
-
 
 const token = localStorage.getItem('token');
 if (token) {
