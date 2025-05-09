@@ -36,9 +36,9 @@ const EditUserInfo = () => {
             }
 
             const response = await axios.put(
-                'http://localhost:5000/api/v1/auth/updateInfo',
+                '/api/v1/auth/updateInfo',
                 {
-                    id: editedUser._id,
+                    id: user._id,
                     name: editedUser.name,
                     email: editedUser.email,
                     phone: editedUser.phone,
@@ -46,6 +46,7 @@ const EditUserInfo = () => {
                 },
                 {
                     headers: {
+                        'Content-Type': 'application/json',
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     }
                 }

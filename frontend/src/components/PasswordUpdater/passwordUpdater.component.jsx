@@ -63,7 +63,7 @@ const PasswordUpdater = () => {
       setIsLoading(true);
       
       const response = await axios.put(
-        'http://localhost:5000/api/v1/auth/updatePassword',
+        '/api/v1/auth/updatePassword',
         {
           id: user._id,
           currentPassword: passwords.currentPassword,

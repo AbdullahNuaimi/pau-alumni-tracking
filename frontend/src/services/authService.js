@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { setAuthToken } from './api';
-const API_URL = 'http://localhost:5000/api/v1/auth';
 
-
+const API_URL = '/api/v1/auth';
 
 // Register User
 export const register = async (userData) => {

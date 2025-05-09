@@ -61,7 +61,7 @@ const AdminArticleEditor = () => {
 
     try {
       const res = await axios.post(
-        'http://localhost:5000/api/v1/articles/upload',
+        '/api/v1/articles/upload',
         formData,
         {
           headers: {

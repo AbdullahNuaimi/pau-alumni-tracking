@@ -65,7 +65,7 @@ const CareerEditor = () => {
   const saveCareers = async () => {
     try {
       const response = await axios.put(
-        'http://localhost:5000/api/v1/auth/updateCareer',
+        '/api/v1/auth/updateCareer',
         {
           id: user._id,
           career: careers.map(c => ({

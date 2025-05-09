@@ -46,7 +46,7 @@ const ProfileImageUploader = () => {
       setIsUploading(true);
       
       const response = await axios.put(
-        'http://localhost:5000/api/v1/auth/updateProfileImage',
+        '/api/v1/auth/updateProfileImage',
         {
           id: user._id,
           profilePic: previewImage
