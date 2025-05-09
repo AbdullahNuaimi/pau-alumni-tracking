@@ -3,6 +3,7 @@ import { universitiesList } from '../../assets/universities';
 import './educationSelection.css';
 import { useUser } from '../../contexts/UserContext';
 import { toast, Bounce } from 'react-toastify';
+import axios from 'axios';
 
 const EducationSelection = () => {
     const { user, setUser } = useUser();
@@ -95,16 +96,10 @@ const EducationSelection = () => {
             const updatedUser = await updateUserEducation();
             localStorage.setItem("user", JSON.stringify(updatedUser));
 
-            const response = await fetch("http://localhost:5000/api/v1/auth/updateEducation", {
-                method: "POST",
-                headers: {
-                    "content-type": "application/json",
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
-                body: JSON.stringify({
-                    id: updatedUser._id, 
-                    education: [...updatedUser.education]
-                })
+
+            const response = await axios.post('/api/v1/auth/updateEducation', {
+                id: updatedUser._id,
+                education: [...updatedUser.education]
             });
 
             if (response.status === 200) {
@@ -138,16 +133,9 @@ const EducationSelection = () => {
         localStorage.setItem("user", JSON.stringify(updatedUser));
         
         try {
-            const response = await fetch("http://localhost:5000/api/v1/auth/updateEducation", {
-                method: "POST",
-                headers: {
-                    "content-type": "application/json",
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
-                body: JSON.stringify({
-                    id: updatedUser._id, 
-                    education: updatedEducation
-                })
+            const response = await axios.post('/api/v1/auth/updateEducation', {
+                id: updatedUser._id,
+                education: updatedEducation
             });
             
             if (response.status === 200) {
