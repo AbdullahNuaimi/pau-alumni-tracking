@@ -1,0 +1,11 @@
+Y5PahqTrPG5nYu9J
+
+superadmin
+
+
+mongodb+srv://superadmin:Y5PahqTrPG5nYu9J@cluster0.cvcckbb.mongodb.net/
+
+
+https://dashing-tail-production.up.railway.app
+
+https://pau-alumni-tracking-production.up.railway.app:8080

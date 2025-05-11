@@ -40,6 +40,16 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(morgan('dev'));
 
 
+// Welcome message route
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Welcome to PAU Alumni Tracking System API',
+    status: 'Server is running',
+    version: '1.0.0',
+    documentation: 'API endpoints are available at /api/v1/'
+  });
+});
+
 app.use((req, res, next) => {
   res.header('Content-Type', 'application/json;charset=UTF-8');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
