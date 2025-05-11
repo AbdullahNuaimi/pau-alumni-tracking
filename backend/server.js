@@ -41,13 +41,31 @@ app.use(morgan('dev'));
 
 
 // Welcome message route
-app.get('/', (req, res) => {
-  res.json({
-    message: 'Welcome to PAU Alumni Tracking System API',
-    status: 'Server is running',
-    version: '1.0.0',
-    documentation: 'API endpoints are available at /api/v1/'
-  });
+app.get('/', async (req, res) => {
+  try {
+    const dbStatus = await connectDB();
+    res.json({
+      message: 'Welcome to PAU Alumni Tracking System API',
+      status: 'Server is running',
+      database: {
+        status: dbStatus ? 'Connected' : 'Disconnected',
+        message: dbStatus ? 'Successfully connected to MongoDB' : 'Failed to connect to MongoDB'
+      },
+      version: '1.0.0',
+      documentation: 'API endpoints are available at /api/v1/'
+    });
+  } catch (error) {
+    res.json({
+      message: 'Welcome to PAU Alumni Tracking System API',
+      status: 'Server is running',
+      database: {
+        status: 'Error',
+        message: 'Failed to check database connection'
+      },
+      version: '1.0.0',
+      documentation: 'API endpoints are available at /api/v1/'
+    });
+  }
 });
 
 app.use((req, res, next) => {
