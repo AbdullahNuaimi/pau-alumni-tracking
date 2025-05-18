@@ -2,10 +2,13 @@ Y5PahqTrPG5nYu9J
 
 superadmin
 
-
+for compass:
 mongodb+srv://superadmin:Y5PahqTrPG5nYu9J@cluster0.cvcckbb.mongodb.net/
 
 
-https://dashing-tail-production.up.railway.app
+for node js:
+mongodb+srv://superadmin:Y5PahqTrPG5nYu9J@cluster0.cvcckbb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 
-https://pau-alumni-tracking-production.up.railway.app:8080
+
+backend url
+https://pau-alumni-tracking-production.up.railway.app

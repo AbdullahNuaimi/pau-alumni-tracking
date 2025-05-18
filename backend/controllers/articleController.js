@@ -1,5 +1,13 @@
 import Article from '../models/Article.js';
 
+const getFullImageUrl = (path) => {
+  if (!path) return null;
+  const baseUrl = process.env.NODE_ENV === 'production' 
+    ? 'https://pau-alumni-tracking-production.up.railway.app'
+    : 'http://localhost:5000';
+  return path.startsWith('http') ? path : `${baseUrl}${path}`;
+};
+
 export const createArticle = async (req, res, next) => {
   try {
     const existingArticle = await Article.findOne({ title: req.body.title });
@@ -12,7 +20,9 @@ export const createArticle = async (req, res, next) => {
 
     const article = await Article.create({
       ...req.body,
-      author: req.user.id
+      author: req.user.id,
+      featuredImage: req.body.featuredImage ? getFullImageUrl(req.body.featuredImage) : null,
+      images: req.body.images ? req.body.images.map(img => getFullImageUrl(img)) : []
     });
 
     res.status(201).json({
@@ -36,10 +46,17 @@ export const getArticles = async (req, res, next) => {
       .sort('-publishedAt')
       .populate('author', 'name profilePic');
 
+    // Transform image URLs
+    const transformedArticles = articles.map(article => ({
+      ...article.toObject(),
+      featuredImage: getFullImageUrl(article.featuredImage),
+      images: article.images.map(img => getFullImageUrl(img))
+    }));
+
     res.status(200).json({
       success: true,
       count: articles.length,
-      data: articles
+      data: transformedArticles
     });
   } catch (err) {
     next(err);
@@ -92,7 +109,7 @@ export const deleteArticle = async (req, res, next) => {
 
 export const getArticleById = async (req, res, next) => {
   try {
-    const article = await Article.findById( req.params.id )
+    const article = await Article.findById(req.params.id)
       .populate('author', 'name profilePic');
 
     if (!article) {
@@ -102,9 +119,16 @@ export const getArticleById = async (req, res, next) => {
       });
     }
 
+    // Transform image URLs
+    const transformedArticle = {
+      ...article.toObject(),
+      featuredImage: getFullImageUrl(article.featuredImage),
+      images: article.images.map(img => getFullImageUrl(img))
+    };
+
     res.status(200).json({
       success: true,
-      data: article
+      data: transformedArticle
     });
   } catch (err) {
     next(err);
