@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://pau-alumni-tracking-production.up.railway.app';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://web-production-e663.up.railway.app/';
 console.log('API Base URL:', API_BASE_URL); // Debug log
 
 if (!API_BASE_URL.includes('localhost')) {
